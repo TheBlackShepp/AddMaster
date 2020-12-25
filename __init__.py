@@ -3,16 +3,7 @@ import os
 from flask import Flask, render_template, request
 
 def create_app() -> Flask:
-    app = Flask(__name__, instance_relative_config=True)
-    
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-    ) 
-
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    app = Flask(__name__)
     
     @app.route('/')
     def index():
