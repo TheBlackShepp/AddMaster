@@ -1,12 +1,15 @@
 import os
 from flask import Flask, render_template, request
 
-
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def login():
     return render_template('login.html')
+
+@app.route('/dashboard')
+def index():
+    return render_template('index.html')
 
 @app.route('/create-account')
 def createAccount():
