@@ -1,0 +1,30 @@
+Quien posee TipoMateria:
+    MateriaPrima
+    DetalleMateriaPrima
+
+Hay que ver que funciones se quieren tener de primeras
+
+
+Por ahora de la API REST hare solo los GET, despues hare los POST
+
+
+
+Realizado:
+    Todas las clases base del diagrama de clases
+    Conector con mysql (Ok)
+    Controlador de cookies simple (Ok)
+
+
+    IDClass                 Preparado para poder ser Heredado
+    Persona                 Preparado para poder ser Heredado
+    Usuario                 Preparado para poder ser Heredado
+    Cliente                 Preparado para poder ser Heredado
+    MateriaPrima            Preparado para poder ser Heredado
+    DetalleMateriaPrima     Preparado para poder ser Heredado
+    Producto                Preparado para poder ser Heredado
+    Pedido                  Preparado para poder ser Heredado
+    PedidoDetalle           Preparado para poder ser Heredado
+
+    DebugClass              Preparado para poder ser Heredado
+
+
