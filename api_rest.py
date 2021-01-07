@@ -9,6 +9,9 @@ controlador_cookies = ControladorCookies()
 
 @app.route("/igresar_datos_producto", methods=["POST"])
 def igresar_datos_producto():
+
+
+
     print(type(request.form))
     return "http://0.0.0.0:8080"
 
@@ -16,6 +19,11 @@ def igresar_datos_producto():
 @app.route("/", methods=["GET"])
 def index():
     return "http://0.0.0.0:8080"
+
+
+
+
+
 
 
 if __name__ == '__main__':

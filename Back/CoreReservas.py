@@ -8,6 +8,7 @@ class CoreBase:
     _control_variables: ControlVariables = ControlVariables()
     _params: str = "params"
     _permission: str = "permission"
+    __resultado: str = "post_result"
     _tipo_de_core: TipoCore
 
     # endregion
@@ -79,6 +80,18 @@ class CoreBodega(CoreBase):
     pass
 
 
+class SeesionControl(CoreBase):
+    def comprobar_inicio_sesion(self, formulario):
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li = ["email", "password"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def iniciar_sesion(self, email: str, password: str) -> bool:
+        return email == "pato@gmail.com" and password == "PatoPassword1"
+
+
 d = {
     "nombre": "",
     "cantidad": "",
@@ -90,10 +103,10 @@ d = {
 }
 
 c = CoreReservas()
-"""print(c.get_datos_producto("", "001"))
+print(c.get_datos_producto("", "001"))
 print(c.get_datos_producto("001", ""))
 print(c.get_datos_producto("002", "001"))
-print(c.get_datos_producto("001", "001"))"""
+print(c.get_datos_producto("001", "001"))
 print(c.comprobar_igresar_datos_producto(d))
 
 
