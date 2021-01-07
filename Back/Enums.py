@@ -21,3 +21,4 @@ class TipoCore(Enum):
     NULL = -1
     CoreReservas = 0
     CoreBodega = 1
+    Sesion = 2

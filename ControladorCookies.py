@@ -67,6 +67,12 @@ class ControladorCookies:
         """
         return self.__cookieValue
 
+    def get_cookie_by_cookie_jar(self, cookie_jar: dict) -> str:
+        resultado = cookie_jar.get(self.__cookieValue)
+        if resultado is None:
+            resultado = ""
+        return resultado
+
     # endregion
     def __init__(self):
         self.__cookies_dict = {}

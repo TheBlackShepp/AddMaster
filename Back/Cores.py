@@ -26,9 +26,17 @@ class CoreBase:
         elif self._tipo_de_core == TipoCore.CoreReservas:
             if id_usuario == "001":
                 resultado = True
+        elif self._tipo_de_core == TipoCore.Sesion:
+            resultado = True
         else:
             resultado = False
         return resultado
+
+    def get_dict_params(self, value: bool) -> dict:
+        return {self._params: value}
+
+    def get_dict_permission(self, value: bool) -> dict:
+        return {self._permission: value}
 
     # endregion
     def __init__(self, tipo: TipoCore):
@@ -39,7 +47,7 @@ class CoreReservas(CoreBase):
     def __init__(self):
         super().__init__(TipoCore.CoreReservas)
 
-    def comprobar_igresar_datos_producto(self, formulario) -> bool:
+    def comprobar_igresar_datos_producto(self, formulario: dict) -> bool:
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """
@@ -57,8 +65,9 @@ class CoreReservas(CoreBase):
         """
         result: dict = {}
         if self._control_variables.variable_correcta_list([id_usuario, id_producto]):
-            result.update({self._params: True})
+            result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
                 result.update({
                     self._permission: True,
                     "nombre": "Producto 1",
@@ -70,26 +79,38 @@ class CoreReservas(CoreBase):
                     "descripcion": "No hay mucho que poner en un producto ficticio"
                 })
             else:
-                result.update({self._permission: False})
+                result.update(self.get_dict_permission(False))
         else:
-            result.update({self._params: False})
+            result.update(self.get_dict_params(False))
         return result
 
 
 class CoreBodega(CoreBase):
-    pass
+    def __init__(self):
+        super().__init__(TipoCore.CoreBodega)
 
 
-class SeesionControl(CoreBase):
-    def comprobar_inicio_sesion(self, formulario):
+class CoreSeesion(CoreBase):
+    def __init__(self):
+        super().__init__(TipoCore.Sesion)
+
+    def comprobar_inicio_sesion(self, formulario: dict):
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """
         li = ["email", "password"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
-    def iniciar_sesion(self, email: str, password: str) -> bool:
-        return email == "pato@gmail.com" and password == "PatoPassword1"
+    def iniciar_sesion(self, formulario: dict) -> str:
+        """
+        Inicia sesion
+        Devuelve el id del usuario
+        Devuelve -1 si no existe
+        """
+        result: str = ""
+        if formulario["email"] == "pato@gmail.com" and formulario["password"] == "PatoPassword1":
+            result = "0"
+        return result
 
 
 d = {
