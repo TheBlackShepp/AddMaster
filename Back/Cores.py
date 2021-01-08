@@ -8,7 +8,7 @@ class CoreBase:
     _control_variables: ControlVariables = ControlVariables()
     _params: str = "params"
     _permission: str = "permission"
-    __resultado: str = "post_result"
+    _resultado: str = "post_result"
     _tipo_de_core: TipoCore
 
     # endregion
@@ -38,6 +38,9 @@ class CoreBase:
     def get_dict_permission(self, value: bool) -> dict:
         return {self._permission: value}
 
+    def get_dict_resultado(self, value: bool) -> dict:
+        return {self._resultado: value}
+
     # endregion
     def __init__(self, tipo: TipoCore):
         self._tipo_de_core = tipo
@@ -53,6 +56,29 @@ class CoreReservas(CoreBase):
         """
         li = ["nombre", "cantidad", "precio", "fecha_inicio_venta", "fecha_fin_venta", "etiquetas", "descripcion"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def igresar_datos_producto(self, id_usuario: str, formulario: dict) -> dict:
+        """
+        Ingresa los datos de un producto al core Reservas
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta(id_usuario) and self.comprobar_igresar_datos_producto(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
 
     def get_datos_producto(self, id_usuario: str, id_producto: str) -> dict:
         """
@@ -94,7 +120,7 @@ class CoreSeesion(CoreBase):
     def __init__(self):
         super().__init__(TipoCore.Sesion)
 
-    def comprobar_inicio_sesion(self, formulario: dict):
+    def comprobar_inicio_sesion(self, formulario: dict) -> bool:
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """

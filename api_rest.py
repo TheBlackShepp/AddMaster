@@ -79,6 +79,10 @@ def login():
 
 @app.route("/igresar_datos_producto", methods=["POST"])
 def igresar_datos_producto():
+
+
+
+
     print(type(request.form))
     return "http://0.0.0.0:8080"
 
