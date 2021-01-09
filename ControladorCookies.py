@@ -10,7 +10,7 @@ class ControladorCookies:
 
     # endregion
     # region Cookies
-    def __get_cookie_por_usuario(self, id_persona: str) -> str:
+    def __get_cookie_por_usuario(self, id_persona: int) -> str:
         """
         Devuelve la cookie asociada a un id
         Si no se encuentra nada devuelve un string vacio
@@ -28,7 +28,7 @@ class ControladorCookies:
         """
         return self.__cookies_dict.__contains__(cookie)
 
-    def generar_cookie(self, id_persona: str) -> str:
+    def generar_cookie(self, id_persona: int) -> str:
         """
         Genera una cookie para un id recibido
         Si el id ya estaba en la lista devuelve la misma cookie
@@ -50,14 +50,14 @@ class ControladorCookies:
             result = True
         return result
 
-    def get_id(self, cookie: str) -> str:
+    def get_id(self, cookie: str) -> int:
         """
-        Devuelve un string con el id del usuario que contiene la cookie
-        Si la cookie no esta asociada a ningun usuario devuelve un string vacio
+        Devuelve un el id del usuario que contiene la cookie
+        Si la cookie no esta asociada a ningun usuario devuelve -1
         """
         result = self.__cookies_dict.get(cookie)
-        if self.__control_variables.variable_correcta(result) is False:
-            result = ""
+        if result is None:
+            result = -1
         return result
 
     def cookie_value(self) -> str:

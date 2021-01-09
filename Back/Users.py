@@ -1,5 +1,4 @@
 from Enums import TipoUsuario
-from datetime import date
 
 
 class IDClass:
@@ -24,6 +23,11 @@ class IDClass:
         self._id = value
 
     # endregion
+    def formulario(self, formulario: dict):
+        self._id = formulario["id"]
+
+    def __dict__(self) -> dict:
+        return {"id": self._id}
 
 
 class Persona(IDClass):
@@ -34,14 +38,14 @@ class Persona(IDClass):
     _apellido2: str
     _telefono: str
     _edad: int
-    _fecha_nacimiento: date
+    _fecha_nacimiento: str
     _domicilio: str
     _sexo: str
 
     # endregion
     # region Operadores
     def __init__(self, email: str = "", nombre: str = "", apellido: str = "", apellido2: str = "", telefono: str = "",
-                 edad: int = 0, fecha_nacimiento: date = None, domicilio: str = "", sexo: str = "", id: int = -1):
+                 edad: int = 0, fecha_nacimiento: str = "", domicilio: str = "", sexo: str = "", id: int = -1):
         super().__init__(id=id)
         self._email = email
         self._nombre = nombre
@@ -80,7 +84,7 @@ class Persona(IDClass):
         return self._edad
 
     @property
-    def fecha_nacimiento(self) -> date:
+    def fecha_nacimiento(self) -> str:
         return self._fecha_nacimiento
 
     @property
@@ -118,7 +122,7 @@ class Persona(IDClass):
         self._edad = value
 
     @fecha_nacimiento.setter
-    def fecha_nacimiento(self, value: date):
+    def fecha_nacimiento(self, value: str):
         self._fecha_nacimiento = value
 
     @domicilio.setter
@@ -130,6 +134,32 @@ class Persona(IDClass):
         self._sexo = value
 
     # endregion
+    def formulario(self, formulario: dict):
+        super(Persona, self).formulario(formulario)
+        self._email = formulario["email"]
+        self._nombre = formulario["nombre"]
+        self._apellido = formulario["apellido"]
+        self._apellido2 = formulario["apellido2"]
+        self._telefono = formulario["telefono"]
+        self._edad = formulario["edad"]
+        self._fecha_nacimiento = formulario["fecha_nacimiento"]
+        self._domicilio = formulario["domicilio"]
+        self._sexo = formulario["sexo"]
+
+    def __dict__(self) -> dict:
+        dict_json: dict = super(Persona, self).__dict__()
+        dict_json.update({
+            "email": self._email,
+            "nombre": self._nombre,
+            "apellido": self._apellido,
+            "apellido2": self._apellido2,
+            "telefono": self._telefono,
+            "edad": self._edad,
+            "fecha_nacimiento": self._fecha_nacimiento,
+            "domicilio": self._domicilio,
+            "sexo": self._sexo
+        })
+        return dict_json
 
 
 class Usuario(Persona):
@@ -139,7 +169,7 @@ class Usuario(Persona):
     # endregion
     # region Operadores
     def __init__(self, email: str = "", nombre: str = "", apellido: str = "", apellido2: str = "", telefono: str = "",
-                 edad: int = 0, fecha_nacimiento: date = None, domicilio: str = "", sexo: str = "",
+                 edad: int = 0, fecha_nacimiento: str = "", domicilio: str = "", sexo: str = "",
                  acceso: TipoUsuario = TipoUsuario.NULL):
         super().__init__(email=email, nombre=nombre, apellido=apellido, apellido2=apellido2, telefono=telefono,
                          sexo=sexo, domicilio=domicilio, edad=edad, fecha_nacimiento=fecha_nacimiento)
@@ -158,6 +188,14 @@ class Usuario(Persona):
         self._acceso = value
 
     # endregion
+    def formulario(self, formulario: dict):
+        super(Usuario, self).formulario(formulario)
+        self._acceso = TipoUsuario(formulario["acceso"])
+
+    def __dict__(self) -> dict:
+        dict_json: dict = super(Usuario, self).__dict__()
+        dict_json.update({"acceso": self._acceso.value})
+        return dict_json
 
 
 class Cliente(Persona):
@@ -167,7 +205,7 @@ class Cliente(Persona):
     # endregion
     # region Operadores
     def __init__(self, email: str = "", nombre: str = "", apellido: str = "", apellido2: str = "", telefono: str = "",
-                 edad: int = 0, fecha_nacimiento: date = None, domicilio: str = "", sexo: str = "", id: int = -1):
+                 edad: int = 0, fecha_nacimiento: str = "", domicilio: str = "", sexo: str = "", id: int = -1):
         super().__init__(email=email, nombre=nombre, apellido=apellido, apellido2=apellido2, telefono=telefono,
                          sexo=sexo, domicilio=domicilio, edad=edad, fecha_nacimiento=fecha_nacimiento, id=id)
         self._pedidos = []
@@ -203,5 +241,11 @@ class Cliente(Persona):
         self._pedidos.append(item)
 
     # endregion
+    def formulario(self, formulario: dict):
+        super(Cliente, self).formulario(formulario)
+        self._pedidos = formulario["pedidos"]
 
-
+    def __dict__(self) -> dict:
+        dict_json: dict = super(Cliente, self).__dict__()
+        dict_json.update({"pedidos": self._pedidos})
+        return dict_json

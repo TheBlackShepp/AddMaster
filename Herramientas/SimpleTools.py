@@ -69,6 +69,23 @@ class ControlVariables:
                     break
         return resultado
 
+    def variable_correcta_list_int(self, var: list) -> bool:
+        """
+        Usa en una lista de ints la funcion variable_correcta_int()
+        Devuelve true si todas los valores contenidos son validas
+        """
+        if var is None:
+            resultado = False
+        elif var.__len__() == 0:
+            resultado = False
+        else:
+            resultado = True
+            for i in var:
+                resultado = self.variable_correcta_int(i)
+                if resultado is False:
+                    break
+        return resultado
+
     def remove_null_from_list(self, var: list) -> int:
         """
         Elimina de una lista de strings todos los strings no validos segun la funcion variable_correcta()

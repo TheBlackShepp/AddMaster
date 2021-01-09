@@ -1,6 +1,10 @@
-from Enums import TipoCore
+from Enums import TipoCore, TipoUsuario
 from Herramientas.SimpleTools import ControlVariables
 from datetime import date
+from DatabaseController import DatabaseController
+
+
+database_controller: DatabaseController = DatabaseController()
 
 
 class CoreBase:
@@ -13,19 +17,19 @@ class CoreBase:
 
     # endregion
     # region Funciones
-    def user_have_permission(self, id_usuario: str) -> bool:
+    def user_have_permission(self, id_usuario: int) -> bool:
         """
         Nos indica si el usaurio puede acceder al sector de esta clase
         """
         resultado: bool = False
-        if self._control_variables.variable_correcta(id_usuario) is False:
+        if self._control_variables.variable_correcta_int(id_usuario) is False:
             resultado = False
         elif self._tipo_de_core == TipoCore.CoreBodega:
-            if id_usuario == "002":
-                resultado = True
+            tipo = database_controller.user_permission(id_usuario)
+            resultado = tipo == TipoUsuario.Personal or tipo == TipoUsuario.Dolores
         elif self._tipo_de_core == TipoCore.CoreReservas:
-            if id_usuario == "001":
-                resultado = True
+            tipo = database_controller.user_permission(id_usuario)
+            resultado = tipo == TipoUsuario.Administrativo or tipo == TipoUsuario.Dolores
         elif self._tipo_de_core == TipoCore.Sesion:
             resultado = True
         else:
@@ -47,9 +51,7 @@ class CoreBase:
 
 
 class CoreReservas(CoreBase):
-    def __init__(self):
-        super().__init__(TipoCore.CoreReservas)
-
+    # region POST
     def comprobar_igresar_datos_producto(self, formulario: dict) -> bool:
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
@@ -57,9 +59,10 @@ class CoreReservas(CoreBase):
         li = ["nombre", "cantidad", "precio", "fecha_inicio_venta", "fecha_fin_venta", "etiquetas", "descripcion"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
-    def igresar_datos_producto(self, id_usuario: str, formulario: dict) -> dict:
+    def igresar_datos_producto(self, id_usuario: int, formulario: dict) -> dict:
         """
         Ingresa los datos de un producto al core Reservas
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
         Segun los datos recibidos:
             permission True: Se puede acceder a esta funcionalidad con el id_persona
             permission False: No se puede acceder a esta funcionalidad con el id_persona
@@ -69,10 +72,11 @@ class CoreReservas(CoreBase):
             post_result False: No se han creado o modificado los datos de un producto
         """
         result: dict = {}
-        if self._control_variables.variable_correcta(id_usuario) and self.comprobar_igresar_datos_producto(formulario):
+        if self.comprobar_igresar_datos_producto(formulario):
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
+                database_controller.igresar_datos_producto(formulario)
                 result.update(self.get_dict_resultado(True))
             else:
                 result.update(self.get_dict_permission(False))
@@ -80,7 +84,34 @@ class CoreReservas(CoreBase):
             result.update(self.get_dict_params(False))
         return result
 
-    def get_datos_producto(self, id_usuario: str, id_producto: str) -> dict:
+    def modificar_datos_producto(self, id_usuario: int, id_producto: int, formulario: dict) -> dict:
+        """
+        Modifica los datos de un producto al core Reservas
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_igresar_datos_producto(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(
+                    database_controller.modificar_datos_producto(id_producto, formulario)))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    # endregion
+    # region GET
+    def get_datos_producto(self, id_usuario: int, id_producto: int) -> dict:
         """
         Obtiene los datos de un producto en un diccionario
         Segun los datos recibidos:
@@ -90,28 +121,33 @@ class CoreReservas(CoreBase):
             params False: Los datos recibidos no estan en formato correcto
         """
         result: dict = {}
-        if self._control_variables.variable_correcta_list([id_usuario, id_producto]):
+        if self._control_variables.variable_correcta_list_int([id_usuario, id_producto]):
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
-                result.update({
-                    self._permission: True,
-                    "nombre": "Producto 1",
-                    "cantidad": 100,
-                    "precio": 1000,
-                    "fecha_inicio_venta": date.today(),
-                    "fecha_fin_venta": date.today(),
-                    "etiquetas": ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"],
-                    "descripcion": "No hay mucho que poner en un producto ficticio"
-                })
+                d = database_controller.get_datos_producto(id_producto)
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
             else:
                 result.update(self.get_dict_permission(False))
         else:
             result.update(self.get_dict_params(False))
         return result
 
+    # endregion
+    def __init__(self):
+        super().__init__(TipoCore.CoreReservas)
+
 
 class CoreBodega(CoreBase):
+    # region POST
+
+    # endregion
+    # region GET
+
+    # endregion
     def __init__(self):
         super().__init__(TipoCore.CoreBodega)
 
@@ -139,22 +175,18 @@ class CoreSeesion(CoreBase):
         return result
 
 
-d = {
-    "nombre": "",
-    "cantidad": "",
-    "precio": "",
-    "fecha_inicio_venta": "",
-    "fecha_fin_venta": "",
-    "etiquetas": "",
-    "descripcion": ""
-}
-
 c = CoreReservas()
-print(c.get_datos_producto("", "001"))
-print(c.get_datos_producto("001", ""))
-print(c.get_datos_producto("002", "001"))
-print(c.get_datos_producto("001", "001"))
-print(c.comprobar_igresar_datos_producto(d))
+print(c.get_datos_producto(0, 0))
+print(c.modificar_datos_producto(0, 0, {
+    "nombre": "Producto 1 modificado",
+    "cantidad": 999,
+    "precio": 1,
+    "fecha_inicio_venta": date.today().__str__(),
+    "fecha_fin_venta": date.today().__str__(),
+    "etiquetas": ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"],
+    "descripcion": "No hay mucho que poner en un producto ficticio"
+}))
+database_controller.save_all()
 
 
 
