@@ -1,7 +1,7 @@
-from Enums import TipoCore, TipoUsuario
+from Back.DatabaseController import DatabaseController
+from Back.Enums import TipoCore, TipoUsuario
 from Herramientas.SimpleTools import ControlVariables
 from datetime import date
-from DatabaseController import DatabaseController
 
 
 database_controller: DatabaseController = DatabaseController()

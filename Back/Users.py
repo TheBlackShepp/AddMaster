@@ -1,4 +1,4 @@
-from Enums import TipoUsuario
+from Back.Enums import TipoUsuario
 
 
 class IDClass:

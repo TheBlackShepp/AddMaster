@@ -1,5 +1,5 @@
-from Enums import TipoMateria
-from Users import IDClass, date
+from Back.Enums import TipoMateria
+from Back.Users import IDClass
 
 
 class MateriaPrima(IDClass):
@@ -41,12 +41,12 @@ class DetalleMateriaPrima(MateriaPrima):
     # region Variables
     _registro: dict    # date(fecha_llegada): int(cantidad)
     _cantidad_recibida: int
-    _fecha_llegada: date
+    _fecha_llegada: str
 
     # endregion
     # region Operadores
     def __init__(self, id: int = -1, tipo_materia: TipoMateria = TipoMateria.NULL, cantidad: int = -1,
-                 cantidad_recibida: int = -1, fecha_llegada: date = None):
+                 cantidad_recibida: int = -1, fecha_llegada: str = None):
         super().__init__(id, tipo_materia, cantidad)
         self._cantidad_recibida = cantidad_recibida
         self._fecha_llegada = fecha_llegada
@@ -59,7 +59,7 @@ class DetalleMateriaPrima(MateriaPrima):
         return self._cantidad_recibida
 
     @property
-    def fecha_llegada(self) -> date:
+    def fecha_llegada(self) -> str:
         return self._fecha_llegada
 
     # endregion
@@ -69,7 +69,7 @@ class DetalleMateriaPrima(MateriaPrima):
         self._cantidad_recibida = value
 
     @fecha_llegada.setter
-    def fecha_llegada(self, value: date):
+    def fecha_llegada(self, value: str):
         self._fecha_llegada = value
 
     # endregion
@@ -77,22 +77,22 @@ class DetalleMateriaPrima(MateriaPrima):
     def registro_len(self) -> int:
         return self._registro.__len__()
 
-    def get_item(self, key: date) -> int:
+    def get_item(self, key: str) -> int:
         result: int = -1
         if self._registro.get(key) is not None:
             result = self._registro[key]
         return result
 
-    def remove_item(self, key: date) -> bool:
+    def remove_item(self, key: str) -> bool:
         result = False
         if self._registro.get(key) is not None:
             del self._registro[key]
         return result
 
-    def delete_item(self, key: date) -> bool:
+    def delete_item(self, key: str) -> bool:
         return self.remove_item(key)
 
-    def add_item(self, key: date, cantidad: int):
+    def add_item(self, key: str, cantidad: int):
         self._registro.update({key: cantidad})
 
     # endregion

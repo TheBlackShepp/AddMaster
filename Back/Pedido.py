@@ -1,5 +1,5 @@
-from Enums import EtiquetaProducto
-from Users import Cliente, IDClass
+from Back.Enums import EtiquetaProducto
+from Back.Users import Cliente, IDClass
 
 
 class Producto(IDClass):

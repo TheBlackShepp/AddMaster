@@ -1,6 +1,6 @@
 from Herramientas.SimpleTools import DebugClass
-from Pedido import Producto
-from Users import Usuario, TipoUsuario
+from Back.Pedido import Producto
+from Back.Users import Usuario, TipoUsuario
 import json
 
 
@@ -44,6 +44,7 @@ class DatabaseController(DebugClass):
         with open('producto.db', 'w') as outfile:
             json.dump(json_productos, outfile)
 
+    # region Reservas
     def modificar_datos_producto(self, id_producto: int, formulario: dict) -> bool:
         self._print((id_producto, formulario))
         result: bool = False
@@ -66,6 +67,15 @@ class DatabaseController(DebugClass):
         if 0 <= id_producto < self.__producto_list.__len__():
             result.update(self.__producto_list[id_producto].__dict__())
         return result
+
+    # endregion
+
+    def get_pos_id_producto(self, id_producto: int) -> int:
+        result: int = -1
+        for i in range(self.__producto_list.__len__()):
+            if self.__producto_list[i].id == id_producto:
+                result = i
+
 
     def user_permission(self, id_usuario: int) -> TipoUsuario:
         resultado = TipoUsuario.NULL
