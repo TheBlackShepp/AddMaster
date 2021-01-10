@@ -33,6 +33,8 @@ def indexhtml(cookie: str, expire: bool) -> any:
 def homehtml(cookie, expire: bool) -> any:
     return prepararHTML("home.html", cookie, expire)
 
+def subRoute(page: str, cookie: str, expire: bool) -> any:      # hay que pasar vaiables a jinja
+    return prepararHTML("home.html", cookie, expire)
 
 # endregion
 @app.route('/index', methods=["GET"])
@@ -48,6 +50,25 @@ def index():
     # Si tiene cookie y es valida
     else:
         resultado = homehtml(None, False)
+    return resultado
+
+
+@app.route('/index/<path:subpath>', methods=["GET"])
+def dashboardSubPath(subpath):
+
+    print(f'Entra por aqui {subpath}')
+
+    resultado = None
+    cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
+    # Si no tiene cookie
+    if cookiesesion is None:
+        resultado = indexhtml("", False)
+    # Si tiene cookie pero no es valida
+    elif controlador_cookies.contiene_cookie(cookiesesion) is False:
+        resultado = indexhtml("", True)
+    # Si tiene cookie y es valida
+    else:
+        resultado = subRoute(subpath ,None, False)
     return resultado
 
 
@@ -91,4 +112,4 @@ if __name__ == '__main__':
     app.run(
         port=8080,
         host='0.0.0.0',
-        debug=False)  # , ssl_context='adhoc')
+        debug=True)  # , ssl_context='adhoc')
