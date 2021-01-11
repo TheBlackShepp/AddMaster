@@ -35,6 +35,11 @@ def homehtml(cookie, expire: bool, tipo: TipoUsuario) -> any:
 
 
 # endregion
+@app.route('/', methods=["GET"])
+def index_i():
+    return redirect("/index")
+
+
 @app.route('/index', methods=["GET"])
 def index():
     resultado = None

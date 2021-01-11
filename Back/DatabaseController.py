@@ -205,11 +205,11 @@ class DatabaseController(DebugClass):
             result = self.__user_list[pos].acceso
         return result
 
-    def comprobar_user_credentials(self, formulario: dict) -> bool:
-        result: bool = False
-        for i in self.__user_list:
-            if i.same_credentials(formulario):
-                result = True
+    def comprobar_user_credentials(self, formulario: dict) -> int:
+        result: int = -1
+        for i in range(self.__user_list.__len__()):
+            if self.__user_list[i].same_credentials(formulario):
+                result = i
                 break
         return result
 

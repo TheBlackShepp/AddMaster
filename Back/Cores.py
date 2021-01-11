@@ -250,18 +250,17 @@ class CoreReservas(CoreBase):
         return result
 
     # endregion
-
-    # endregion
     def __init__(self):
         super().__init__(TipoCore.CoreReservas)
 
 
 class CoreBodega(CoreBase):
-    # region POST
+    # region Comprobaciones
 
     # endregion
-    # region GET
-
+    # region Materia Prima
+    # endregion
+    # region Personal
     # endregion
     def __init__(self):
         super().__init__(TipoCore.CoreBodega)
