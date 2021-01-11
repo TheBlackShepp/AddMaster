@@ -1,13 +1,14 @@
 const LOCATION = document.location;
+const subpath = LOCATION.pathname.split('/')[LOCATION.pathname.split('/').length -1];
 
 const URL_DOLOGIN = 'doLogin'
 
-// your page initialization code here
-// the DOM will be available here
 
 const makeGet = async(url) => {
 
-    fetch(`${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/${url}`)
+    const response = fetch(`${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/${url}`);
+
+    return response.json();
 }
 
 const makePost = async(url, datos) => {
@@ -29,36 +30,27 @@ const makePost = async(url, datos) => {
 
 (function() {
 
+    switch (subpath) {
+        case 'productos':
+            console.log("PRODUCTOS")
+            break;
+        case 'clientes':
+            break;
+    
+        case 'pedidos':
+            break;
+
+        case 'materias':
+            break;
+
+        case 'personal':
+            break;
+
+        default:
+            break;
+    }
+
+    document.getElementById(`span-${subpath}`).classList.remove('hidden');
+    document.getElementById(`main-${subpath}`).classList.remove('hidden');
+
 })();
-
-const inputFree = (listInput) => {
-
-    if(!Array.isArray(listInput)){
-        return;
-    }
-
-    for(let i = 0; i < listInput.length; i++) {
-        if(listInput[i].value === '')
-            return false;
-    }
-
-    return true;
-}
-
-function doLogin(){
-   
-    const inputUser = document.getElementById('input-login-email');
-    const inputPass = document.getElementById('input-login-password');
-
-    if(!inputFree([inputUser, inputPass])){
-        console.log('Salio')
-        return;    
-    }
-
-    makePost(URL_DOLOGIN, {'username': inputUser.value, 'password': inputPass.value})
-        .then(data => {
-            console.log(data)
-            // document.write(data)
-        })
-        .catch(error => console.log(error))
-}

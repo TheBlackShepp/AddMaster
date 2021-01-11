@@ -16,7 +16,7 @@ core_bodega = CoreBodega()
 # region PaginasWebFunctions
 def prepararHTML(url: str, cookie: str, expire: bool, tipo: TipoUsuario = TipoUsuario.NULL) -> any:
     # Le enviamos el index
-    resp = make_response(render_template(url, permission=tipo))
+    resp = make_response(render_template(url, permission=tipo.value))
     if control_variables.variable_correcta(cookie):
         # Le enviamos la cookie de sesion
         if expire:
