@@ -1,1 +1,1 @@
-"[{\"id\": 0, \"email\": \"dolores@gmail.com\", \"nombre\": \"Dolores\", \"apellido\": \"\", \"apellido2\": \"\", \"telefono\": \"\", \"edad\": 0, \"fecha_nacimiento\": \"\", \"domicilio\": \"\", \"sexo\": \"\", \"acceso\": 0}]"
+"{\"users\": [{\"id\": 0, \"email\": \"dolores@gmail.comm\", \"nombre\": \"\", \"apellido\": \"\", \"apellido2\": \"\", \"telefono\": \"\", \"edad\": 0, \"fecha_nacimiento\": \"\", \"domicilio\": \"\", \"sexo\": \"\", \"acceso\": 0, \"password\": \"7833dc6e82e9378117bcb03128ac8fdd95d9073161ebc963783b3010dd847ff3\"}], \"id\": 0}"

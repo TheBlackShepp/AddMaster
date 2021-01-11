@@ -109,6 +109,64 @@ class CoreReservas(CoreBase):
             result.update(self.get_dict_params(False))
         return result
 
+    def comprobar_dar_alta_cliente(self, formulario: dict) -> bool:
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li = ["email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio", "sexo"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def dar_alta_cliente(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Añade un nuevo cliente a la lista
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_dar_alta_cliente(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                if formulario.get("pedidos") is None:
+                    formulario.update({"pedidos": []})
+                print(formulario)
+                database_controller.dar_alta_cliente(formulario)
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def dar_baja_cliente(self, id_usuario: int, id_cliente: int) -> dict:
+        """
+        Da de baja a un cliente
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se ha eliminado el cliente con exito
+            post_result False: No se ha eliminado el cliente, ya que probablemente no exista
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_list_int([id_usuario, id_cliente]):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_params(database_controller.dar_baja_cliente(id_cliente)))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
     # endregion
     # region GET
     def get_datos_producto(self, id_usuario: int, id_producto: int) -> dict:
@@ -176,7 +234,7 @@ class CoreSeesion(CoreBase):
 
 
 c = CoreReservas()
-print(c.get_datos_producto(0, 0))
+"""print(c.get_datos_producto(0, 0))
 print(c.modificar_datos_producto(0, 0, {
     "nombre": "Producto 1 modificado",
     "cantidad": 999,
@@ -185,6 +243,17 @@ print(c.modificar_datos_producto(0, 0, {
     "fecha_fin_venta": date.today().__str__(),
     "etiquetas": ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"],
     "descripcion": "No hay mucho que poner en un producto ficticio"
+}))"""
+print(c.dar_alta_cliente(0, {
+    "email": "emailtest",
+    "nombre": "Pato",
+    "apellido": "Willyx",
+    "apellido2": "Mixta",
+    "telefono": "666666666",
+    "edad": 2,
+    "fecha_nacimiento": date.today().__str__(),
+    "domicilio": "Noooo!",
+    "sexo": "M"
 }))
 database_controller.save_all()
 

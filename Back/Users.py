@@ -165,15 +165,17 @@ class Persona(IDClass):
 class Usuario(Persona):
     # region Variables
     _acceso: TipoUsuario
+    _password: str
 
     # endregion
     # region Operadores
     def __init__(self, email: str = "", nombre: str = "", apellido: str = "", apellido2: str = "", telefono: str = "",
                  edad: int = 0, fecha_nacimiento: str = "", domicilio: str = "", sexo: str = "",
-                 acceso: TipoUsuario = TipoUsuario.NULL):
+                 acceso: TipoUsuario = TipoUsuario.NULL, password: str = "", id: int = -1):
         super().__init__(email=email, nombre=nombre, apellido=apellido, apellido2=apellido2, telefono=telefono,
-                         sexo=sexo, domicilio=domicilio, edad=edad, fecha_nacimiento=fecha_nacimiento)
+                         sexo=sexo, domicilio=domicilio, edad=edad, fecha_nacimiento=fecha_nacimiento, id=id)
         self._acceso = acceso
+        self._password = password
 
     # endregion
     # region Getters
@@ -181,20 +183,30 @@ class Usuario(Persona):
     def acceso(self) -> TipoUsuario:
         return self._acceso
 
+    @property
+    def password(self) -> str:
+        return self._password
+
     # endregion
     # region Setters
     @acceso.setter
     def acceso(self, value: TipoUsuario):
         self._acceso = value
 
+    @password.setter
+    def password(self, value: str):
+        self._password = value
+
     # endregion
     def formulario(self, formulario: dict):
         super(Usuario, self).formulario(formulario)
         self._acceso = TipoUsuario(formulario["acceso"])
+        self._password = formulario["password"]
 
     def __dict__(self) -> dict:
         dict_json: dict = super(Usuario, self).__dict__()
         dict_json.update({"acceso": self._acceso.value})
+        dict_json.update({"password": self._password})
         return dict_json
 
 
