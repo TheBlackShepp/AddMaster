@@ -56,6 +56,22 @@ def index():
         resultado = homehtml(None, False, sesion_control.get_tipo_usuario(id_usuario))
     return resultado
 
+@app.route('/index/<path:subpath>', methods=["GET"])
+def dashboardSubPath(subpath):
+    resultado = None
+    cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
+    # Si no tiene cookie
+    if cookiesesion is None:
+        resultado = indexhtml("", False)
+    # Si tiene cookie pero no es valida
+    elif controlador_cookies.contiene_cookie(cookiesesion) is False:
+        resultado = indexhtml("", True)
+    # Si tiene cookie y es valida
+    else:
+        id_usuario = controlador_cookies.get_id(cookiesesion)
+        resultado = homehtml(None, False, sesion_control.get_tipo_usuario(id_usuario))
+    return resultado
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
