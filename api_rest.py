@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, make_respo
 from ControladorCookies import ControladorCookies
 from Back.Cores import CoreSeesion, CoreReservas, CoreBodega
 from Herramientas.SimpleTools import ControlVariables
-
+from Back.Enums import TipoUsuario
 
 # Instancias
 app = Flask(__name__)
@@ -14,9 +14,9 @@ core_bodega = CoreBodega()
 
 
 # region PaginasWebFunctions
-def prepararHTML(url: str, cookie: str, expire: bool) -> any:
+def prepararHTML(url: str, cookie: str, expire: bool, tipo: TipoUsuario = TipoUsuario.NULL) -> any:
     # Le enviamos el index
-    resp = make_response(render_template(url))
+    resp = make_response(render_template(url, permission=tipo))
     if control_variables.variable_correcta(cookie):
         # Le enviamos la cookie de sesion
         if expire:
@@ -30,11 +30,13 @@ def indexhtml(cookie: str, expire: bool) -> any:
     return prepararHTML("index.html", cookie, expire)
 
 
-def homehtml(cookie, expire: bool) -> any:
-    return prepararHTML("home.html", cookie, expire)
+def homehtml(cookie, expire: bool, tipo: TipoUsuario) -> any:
+    return prepararHTML("home.html", cookie, expire, tipo)
+
 
 def subRoute(page: str, cookie: str, expire: bool) -> any:      # hay que pasar vaiables a jinja
     return prepararHTML("home.html", cookie, expire)
+
 
 # endregion
 @app.route('/index', methods=["GET"])
@@ -49,7 +51,8 @@ def index():
         resultado = indexhtml("", True)
     # Si tiene cookie y es valida
     else:
-        resultado = homehtml(None, False)
+        id_usuario = controlador_cookies.get_id(cookiesesion)
+        resultado = homehtml(None, False, sesion_control.obtener_tipo_usuario(id_usuario))
     return resultado
 
 
@@ -68,7 +71,7 @@ def dashboardSubPath(subpath):
         resultado = indexhtml("", True)
     # Si tiene cookie y es valida
     else:
-        resultado = subRoute(subpath ,None, False)
+        resultado = subRoute(subpath, None, False)
     return resultado
 
 
@@ -79,12 +82,12 @@ def login():
     if request.method == "POST":
         # Si los parametros recibidos son correctos
         if sesion_control.comprobar_inicio_sesion(request.form):
-            id_usuario: str = sesion_control.iniciar_sesion(request.form)
+            id_usuario: int = sesion_control.iniciar_sesion(request.form)
             # Si las credenciales son correctas
-            if control_variables.variable_correcta(id_usuario):
+            if control_variables.variable_correcta_int(id_usuario):
                 # Generamos un cookie
                 cookie = controlador_cookies.generar_cookie(id_usuario)
-                resultado = homehtml(cookie, False)
+                resultado = homehtml(cookie, False, sesion_control.obtener_tipo_usuario(id_usuario))
             # Si las credenciales no son correctas, lo reenviamos al login
             else:
                 resultado = indexhtml("", False)

@@ -59,8 +59,9 @@ class DatabaseController(DebugClass):
             print("No hay file 'clients.db' aun")
 
     def save_all(self):
-        json_users = dumps({"users": [ob.__dict__() for ob in self.__user_list], "id": self.__last_user_id })
-        json_productos = dumps({"products": [ob.__dict__() for ob in self.__producto_list], "id": self.__last_producto_id})
+        json_users = dumps({"users": [ob.__dict__() for ob in self.__user_list], "id": self.__last_user_id})
+        json_productos = \
+            dumps({"products": [ob.__dict__() for ob in self.__producto_list], "id": self.__last_producto_id})
         json_clients = dumps({"clients": [ob.__dict__() for ob in self.__client_list], "id": self.__last_client_id})
 
         with open('users.db', 'w') as outfile:

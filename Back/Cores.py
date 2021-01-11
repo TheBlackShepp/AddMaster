@@ -221,16 +221,20 @@ class CoreSeesion(CoreBase):
         li = ["email", "password"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
-    def iniciar_sesion(self, formulario: dict) -> str:
+    def iniciar_sesion(self, formulario: dict) -> int:
         """
         Inicia sesion
         Devuelve el id del usuario
         Devuelve -1 si no existe
         """
-        result: str = ""
+        result: int = -1
         if formulario["email"] == "pato@gmail.com" and formulario["password"] == "PatoPassword1":
-            result = "0"
+            result = 0
         return result
+
+    def obtener_tipo_usuario(self, id_usuario: int) -> TipoUsuario:
+        return database_controller.user_permission(id_usuario)
+
 
 
 c = CoreReservas()
