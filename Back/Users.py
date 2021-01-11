@@ -198,6 +198,13 @@ class Usuario(Persona):
         self._password = value
 
     # endregion
+    def same_credentials(self, formulario: dict) -> bool:
+        result: bool = True
+        if self._password == formulario['email']:
+            if self._password == formulario['password']:
+                result = False
+        return result
+
     def formulario(self, formulario: dict):
         super(Usuario, self).formulario(formulario)
         self._acceso = TipoUsuario(formulario["acceso"])

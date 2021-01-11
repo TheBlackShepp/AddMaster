@@ -1,1 +1,1 @@
-"{\"clients\": [{\"id\": 4, \"email\": \"emailtest\", \"nombre\": \"Pato\", \"apellido\": \"Willyx\", \"apellido2\": \"Mixta\", \"telefono\": \"666666666\", \"edad\": 2, \"fecha_nacimiento\": \"2021-01-09\", \"domicilio\": \"Noooo!\", \"sexo\": \"M\", \"pedidos\": []}], \"id\": 5}"
+"{\"clients\": [], \"id\": 5}"
