@@ -34,10 +34,6 @@ def homehtml(cookie, expire: bool, tipo: TipoUsuario) -> any:
     return prepararHTML("home.html", cookie, expire, tipo)
 
 
-def subRoute(page: str, cookie: str, expire: bool) -> any:      # hay que pasar vaiables a jinja
-    return prepararHTML("home.html", cookie, expire)
-
-
 # endregion
 @app.route('/index', methods=["GET"])
 def index():
@@ -52,26 +48,7 @@ def index():
     # Si tiene cookie y es valida
     else:
         id_usuario = controlador_cookies.get_id(cookiesesion)
-        resultado = homehtml(None, False, sesion_control.obtener_tipo_usuario(id_usuario))
-    return resultado
-
-
-@app.route('/index/<path:subpath>', methods=["GET"])
-def dashboardSubPath(subpath):
-
-    print(f'Entra por aqui {subpath}')
-
-    resultado = None
-    cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
-    # Si no tiene cookie
-    if cookiesesion is None:
-        resultado = indexhtml("", False)
-    # Si tiene cookie pero no es valida
-    elif controlador_cookies.contiene_cookie(cookiesesion) is False:
-        resultado = indexhtml("", True)
-    # Si tiene cookie y es valida
-    else:
-        resultado = subRoute(subpath, None, False)
+        resultado = homehtml(None, False, sesion_control.get_tipo_usuario(id_usuario))
     return resultado
 
 
@@ -87,7 +64,7 @@ def login():
             if control_variables.variable_correcta_int(id_usuario):
                 # Generamos un cookie
                 cookie = controlador_cookies.generar_cookie(id_usuario)
-                resultado = homehtml(cookie, False, sesion_control.obtener_tipo_usuario(id_usuario))
+                resultado = homehtml(cookie, False, sesion_control.get_tipo_usuario(id_usuario))
             # Si las credenciales no son correctas, lo reenviamos al login
             else:
                 resultado = indexhtml("", False)
