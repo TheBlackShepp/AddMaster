@@ -244,6 +244,9 @@ class DatabaseController(DebugClass):
         if formulario["creator"] != 0:
             formulario.update({"acceso": TipoUsuario.Personal.value})
         formulario.update({"id": self.__last_user_id})
+        
+        print(type(formulario['password']), formulario['password'])
+        
         formulario.update({"password": sha3_512(formulario['password'].encode()).hexdigest()})
         u = Usuario()
         u.formulario(formulario)

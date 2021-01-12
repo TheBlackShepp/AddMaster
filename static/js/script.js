@@ -1,10 +1,50 @@
 const LOCATION = document.location;
 const subpath = LOCATION.pathname.split('/')[LOCATION.pathname.split('/').length -1];
 
-const URL_GET_LIST_PRODUCT = 'get_lista_productos'
-const URL_GET_LIST_CLIENT = 'get_lista_productos'
-const URL_GET_LIST_ORDER = 'get_lista_productos'
+const keysProducts = ['id', 'nombre', 'cantidad', 'precio', 'fecha_inicio_venta', 'fecha_fin_venta', 'etiquetas', 'descripcion']
+const keysClients = ['id', 'email', 'nombre', 'apellido', 'apellido2', 'telefono', 'edad', 'fecha_nacimiento', 'domicilio',
+'sexo']
+const keysOrders = ['id', 'id_cliente', 'enviar_a_domicilio', 'id_producto', 'fecha_entrega', 'fecha_compra',
+'fecha_entregado']
+const keysMaterials = ['id', 'tipo_materia', 'cantidad', 'registro', 'cantidad_recibida', 'fecha_llegada']
+const keysPersonal = ['id', 'email', 'nombre', 'apellido', 'apellido2', 'telefono', 'edad', 'fecha_nacimiento', 'domicilio',
+'sexo', 'acceso']
 
+
+const URL_GET_LIST_PRODUCT = 'get_lista_productos'
+const URL_GET_LIST_CLIENT = 'get_lista_clientes'
+const URL_GET_LIST_ORDER = 'get_lista_pedidos'
+const URL_GET_LIST_MATERIAL = 'get_lista_materias_primas'
+const URL_GET_LIST_PERSONAL = 'get_lista_usuarios'
+
+
+// product
+const URL_CREATE_PRODUCT = 'igresar_datos_producto'
+const URL_MODIFY_PRODUCT = 'modificar_datos_producto'
+const URL_GET_PRODUCT = 'get_datos_producto'
+
+// client
+const URL_CREATE_CLIENT= 'dar_alta_cliente'
+const URL_MODIFY_CLIENT= 'modificar_datos_cliente'
+const URL_GET_CLIENT= 'get_datos_cliente'
+const URL_DELETE_CLIENT= 'dar_baja_cliente'
+
+// order
+const URL_CREATE_ORDER= 'igresar_datos_pedido'
+const URL_MODIFY_ORDER= 'modificar_datos_pedido'
+const URL_GET_ORDER= 'get_datos_pedido'
+const URL_DELETE_ORDER= 'eliminar_pedido'
+
+// material
+const URL_CREATE_MATERIAL= 'igresar_datos_materia_prima'
+const URL_GET_MATERIAL= 'get_datos_materia_prima'
+const URL_DELETE_MATERIAL= 'eliminar_meteria_prima'
+
+// personal
+const URL_CREATE_PERSONAL= 'ingresar_usuario'
+const URL_GET_PERSONAL= 'get_datos_usuario'
+const URL_DELETE_PERSONAL= 'eliminar_usuario'
+const URL_MODIFY_PERSONAL= 'modificar_usuario'
 
 const makeGet = async(url) => {
 
@@ -38,8 +78,7 @@ const makePost = async(url, datos) => {
             makePost(URL_GET_LIST_PRODUCT, {})
                 .then(data => {
                     console.log(data);
-                    let list = [{'name': 'Vino valhueba', 'img': 'vino_valbuena.jpg'}, {'name': 'Vino mujer cañon', 'img': 'vino_mujercanon.jpg'}]
-                    printListProducts(list)
+                    printListProducts(data.products)
                 })
                 .catch(err => console.error)
             break;
@@ -64,9 +103,23 @@ const makePost = async(url, datos) => {
             break;
 
         case 'materias':
+            makePost(URL_GET_LIST_MATERIAL, {})
+            .then(data => {
+                console.log(data);
+                let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+                printListOrders(list)
+            })
+            .catch(err => console.error)
             break;
 
         case 'personal':
+            makePost(URL_GET_LIST_PERSONAL, {})
+            .then(data => {
+                console.log(data);
+                let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+                printListOrders(list)
+            })
+            .catch(err => console.error)
             break;
 
         default:
@@ -292,18 +345,25 @@ function printListOrders(listOrders){
 function viewDetailsProduct(id){
     console.log(id)
     showFullModal()
+    let o = {'name': 'Marcos Martin', 'description': 'adadadad'}
+    createModal(o)
 }
 
 // view detail client
 function viewDetailsClient(id){
     console.log(id)
     showFullModal()
+    let o = {'name': 'Marcos Martin', 'description': 'adadadad'}
+    createModal(o)
 }
 
 // view detail order
 function viewDetailsOrder(id){
     console.log(id)
     showFullModal()
+
+    let o = {'name': 'Marcos Martin', 'description': 'adadadad'}
+    createModal(o)
 }
 
 
@@ -339,11 +399,14 @@ function deleteOrder(id){
 }
 
 // TODO show modal
-function showFullModal() {
+function showFullModal(typeOpen) {
     const modal = document.getElementById('modal-full')
     modal.style.transform= 'translateY(6.5%)'
 
-    createModal()
+    if(typeOpen != undefined) {
+        console.log(typeOpen)
+    }
+
 }
 
 // TODO close modal
@@ -375,14 +438,350 @@ const inputGeneral = (key, value) => {
     `
 }
 function createModal(object){
-
-    let o = {'name': 'Marcos Martin', 'description': 'adadadad'}
     const container = document.getElementById('container-modal')
 
     let texto = ''
-    for (let key in o) {
-        texto+= inputGeneral(key, o[key])
+    for (let key in object) {
+        texto+= inputGeneral(key, object[key])
     }
     
     container.innerHTML = texto
+}
+
+
+// function crear producto -> FUNCIONA
+function createProduct(){
+    
+    makePost(URL_CREATE_PRODUCT, {
+        'id': 0,
+        'nombre': 'Producto 1 modificado',
+        'cantidad': 999,
+        "precio": 100,
+        'fecha_inicio_venta': '2021-01-09',
+        'fecha_fin_venta': '2021-01-09',
+        'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'],
+        'descripcion': 'No hay mucho que poner en un producto ficticio'
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+
+function modifyProduct(){
+    
+    makePost(URL_MODIFY_PRODUCT, {
+        'id': 0,
+        'nombre': 'Producto 1',
+        'cantidad': 999,
+        "precio": 100,
+        'fecha_inicio_venta': '2021-01-09',
+        'fecha_fin_venta': '2021-01-09',
+        'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'],
+        'descripcion': 'No hay mucho que poner en un producto ficticio'
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function get dato producto -> FUNCIONA
+function getDataProduct(){
+    
+    makePost(URL_GET_PRODUCT, {
+        'id': 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+
+
+
+// function create client -> FUNCTIONA
+function createClient(){
+
+    makePost(URL_CREATE_CLIENT, {
+        "id": 0,
+        "email": "clienteTest1@gmail.com",
+        "nombre": "Nombre Cliente",
+        "apellido": "Apellido 1",
+        "apellido2": "Apellido 2",
+        "telefono": "666666666",
+        "edad": 99,
+        "fecha_nacimiento": new Date().toISOString(),
+        "domicilio": "None",
+        "sexo": "X"
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function modify client -> FUNCTIONA
+function modifyClient(){
+
+    makePost(URL_MODIFY_CLIENT, {
+        "id": 0,
+        "email": "clienteTest1@gmail.com",
+        "nombre": "TU MADRE",
+        "apellido": "ELLA",
+        "apellido2": "Apellido 2",
+        "telefono": "666666666",
+        "edad": 99,
+        "fecha_nacimiento": new Date().toISOString(),
+        "domicilio": "None",
+        "sexo": "X"
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function get data client -> FUNCTIONA
+function getDataClient(){
+
+    makePost(URL_GET_CLIENT, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function delete client -> FUNCTIONA
+function deleteClient(){
+
+    makePost(URL_DELETE_CLIENT, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+
+
+// function create order -> FUNCIONA
+function createOrder(){
+
+    makePost(URL_CREATE_ORDER, {
+        "id": 0, 
+        "id_cliente": 0, 
+        "enviar_a_domicilio": true, 
+        "id_producto": 0, 
+        "fecha_entrega": new Date().toISOString(), 
+        "fecha_compra": new Date().toISOString(),
+        "fecha_entregado": new Date().toISOString()
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function modify order ->  FUNCTIONA
+function modifyOrder(){
+
+    makePost(URL_MODIFY_ORDER, {
+        "id": 0, 
+        "id_cliente": 0, 
+        "enviar_a_domicilio": false, 
+        "id_producto": 0, 
+        "fecha_entrega": new Date().toISOString(), 
+        "fecha_compra": new Date().toISOString(),
+        "fecha_entregado": new Date().toISOString()
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function get order ->  FUNCIONA
+function getOrder(){
+
+    makePost(URL_GET_ORDER, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function delete order ->  FUNCIONA
+function deleteOrder(){
+
+    makePost(URL_DELETE_ORDER, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+
+
+
+// function create material ->  FUNCIONA
+function createMaterial(){
+
+    makePost(URL_CREATE_MATERIAL, {
+        "id": 0,
+        "tipo_materia": 0,
+        "cantidad": 5,
+        "registro": {'casa': 'casa'},
+        "cantidad_recibida": 1,
+        "fecha_llegada": new Date().toISOString()
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function get material ->  FUNCIONA
+function getDataMaterial(){
+
+    makePost(URL_GET_MATERIAL, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function delete material ->  FUNCIONA
+function deleteMaterial(){
+
+    makePost(URL_DELETE_MATERIAL, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+
+
+// function create personal -> FUNCIONA 
+function createPersonal(){
+
+    makePost(URL_CREATE_PERSONAL, {
+        "id": 0,
+
+        "email": "me@me.es",
+        "nombre": "NameSoy",
+        "apellido": "Apellido 1",
+        "apellido2": "Apellido 2",
+        "telefono": "666666666",
+        "edad": 99,
+        "fecha_nacimiento": new Date().toISOString(),
+        "domicilio": "None",
+        "sexo": "X",
+        
+        "acceso": 2,
+        "password": "abc123"
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function modify personal ->  FUNCIONA
+function modifyPersonal(){
+
+    makePost(URL_MODIFY_PERSONAL, {
+        "id": 1,
+
+        "email": "me@me.es",
+        "nombre": "NameSoy",
+        "apellido": "Apellido 1",
+        "apellido2": "Apellido 2",
+        "telefono": "666666666",
+        "edad": 99,
+        "fecha_nacimiento": new Date().toISOString(),
+        "domicilio": "None",
+        "sexo": "X",
+        
+        "acceso": 2,
+        "password": "abc123"
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function get data personal ->  FUNCIONA
+function getDataPersonal(){
+
+    makePost(URL_GET_PERSONAL, {
+        "id": 0
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
+}
+
+// function delete personal ->  FUNCIONA
+function deletePersonal(){
+
+    makePost(URL_DELETE_PERSONAL, {
+        "id": 1
+    })
+        .then(data => {
+            console.log(data);
+            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
+            printListClients(list)
+        })
+        .catch(err => console.error)
 }

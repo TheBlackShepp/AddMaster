@@ -1,11 +1,17 @@
 
 <main id="main-productos" class="h-full pb-16 overflow-y-auto hidden">
   <div class="container px-6 mx-auto grid">
-    <h2
-      class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
-    >
-      Productos
-    </h2>
+    <div class="flex flex-col md:flex-row">
+      <h2 class="flex-none  my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"  >
+        Productos
+      </h2>
+
+
+      <button class="flex-none m-6 p-2 text-{{color}} focus:outline-none anima hover:bg-{{color}} transition duration-300 ease-in-out hover:text-white font-medium rounded-md shadow-md" onclick="showFullModal('product')">
+        Crear Producto
+      </button>
+
+    </div>
     
   
     <div id="container-productos" class="grid gap-6 mb-8 md:grid-cols-2">
