@@ -31904,8 +31904,6 @@ video {
 }
 
 .full-modal{
-  --tw-bg-opacity: 1;
-  background-color: rgba(239, 68, 68, var(--tw-bg-opacity));
   transform: translateY(100%);
   transition: all ease-in-out 0.5s;
 }

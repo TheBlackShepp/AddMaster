@@ -1,4 +1,20 @@
 
-<div class="w-full h-full overflow-y-auto fixed full-modal">
+<div id="modal-full" class="w-full h-full bg-white overflow-y-auto fixed full-modal z-20 shadow-lg">
+
+    <header class="w-full flex flex-col text-gray-600 bg-white shadow rounded-b-lg">
+        <div class="flex relative align-center p-5">
+            <button class="focus:outline-none" tabindex="0" type="button" aria-label="close">
+                <span class="w-full flex" onclick="closeFullModal()">
+                    <svg class="w-7 h-7" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                    </svg>
+                </span>
+                <span class="MuiTouchRipple-root"></span>
+            </button>
+            <h5 class="" style="flex: 0.5 1; margin-left: 2rem; font-size: 1.5rem; font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;  font-weight: 400; letter-spacing: 0em">TITULO</h5>
+            <button class="shadow-md rounded-md focus:outline-none" style="padding: .5rem 2rem;background-color: #1976d2;color: #fff;text-transform: capitalize;transition: .3s;" tabindex="0" type="button">
+                <span class="MuiButton-label">Guardar</span><span class="MuiTouchRipple-root"></span>
+            </button>
+        </div>
+    </header>
 
 </div>
