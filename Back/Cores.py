@@ -582,6 +582,7 @@ class CoreSeesion(CoreBase):
         Devuelve el id del usuario
         Devuelve -1 si no existe
         """
+        formulario = self.restore_form(formulario)
         result: int = -1
         if self.comprobar_inicio_sesion(formulario):
             result = database_controller.comprobar_user_credentials(formulario)
