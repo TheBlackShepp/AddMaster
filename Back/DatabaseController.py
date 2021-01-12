@@ -302,7 +302,9 @@ class DatabaseController(DebugClass):
     def get_lista_user(self) -> dict:
         temp_list: list = []
         for i in self.__user_list:
-            temp_list.append(i.__dict__())
+            d: dict = i.__dict__()
+            d["password"] = None
+            temp_list.append(d)
         return {self.__user_name: temp_list}
 
     def get_user_permission(self, id_usuario: int) -> TipoUsuario:

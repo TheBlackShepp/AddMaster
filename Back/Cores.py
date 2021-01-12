@@ -48,27 +48,62 @@ class CoreBase:
     def get_tipo_usuario(self, id_usuario: int) -> TipoUsuario:
         return database_controller.get_user_permission(id_usuario)
 
+    def fix_int(self, formulario: dict, string: str):
+        if formulario.get(string) is not None:
+            l: list = formulario.get(string)
+            if l.__len__() > 0:
+                formulario.update({string: int(l[0])})
+        return formulario
+
+    def fix_str(self, formulario: dict, string: str):
+        if formulario.get(string) is not None:
+            l: list = formulario.get(string)
+            if l.__len__() > 0:
+                formulario.update({string: l[0]})
+        return formulario
+
+    def fix_bool(self, formulario: dict, string: str):
+        if formulario.get(string) is not None:
+            l: list = formulario.get(string)
+            if l.__len__() > 0:
+                formulario.update({string: bool(l[0])})
+        return formulario
+
     def restore_form(self, formulario: dict) -> dict:
-        if formulario.get('id') is not None:
-            l: list = formulario.get('id')
-            if l.__len__() > 0:
-                formulario.update({"id": int(l[0])})
-        if formulario.get("enviar_a_domicilio") is not None:
-            l: list = formulario.get('enviar_a_domicilio')
-            if l.__len__() > 0:
-                formulario.update({"enviar_a_domicilio": bool(l[0])})
-        if formulario.get('cantidad_recibida') is not None:
-            l: list = formulario.get('cantidad_recibida')
-            if l.__len__() > 0:
-                formulario.update({"cantidad_recibida": int(l[0])})
-        if formulario.get('password') is not None:
-            l: list = formulario.get('password')
-            if l.__len__() > 0:
-                formulario.update({"password": l[0]})
-        if formulario.get('acceso') is not None:
-            l: list = formulario.get('acceso')
-            if l.__len__() > 0:
-                formulario.update({"acceso": int(l[0])})
+        formulario = self.fix_int(formulario, "id")
+
+        formulario = self.fix_str(formulario, "email")
+        formulario = self.fix_str(formulario, "nombre")
+        formulario = self.fix_str(formulario, "apellido")
+        formulario = self.fix_str(formulario, "apellido2")
+        formulario = self.fix_str(formulario, "telefono")
+        formulario = self.fix_int(formulario, "edad")
+        formulario = self.fix_str(formulario, "fecha_nacimiento")
+        formulario = self.fix_str(formulario, "domicilio")
+        formulario = self.fix_str(formulario, "sexo")
+
+        formulario = self.fix_int(formulario, "acceso")
+        formulario = self.fix_str(formulario, "password")
+
+        formulario = self.fix_int(formulario, "cantidad")
+        formulario = self.fix_int(formulario, "precio")
+        formulario = self.fix_str(formulario, "fecha_inicio_venta")
+        formulario = self.fix_str(formulario, "fecha_fin_venta")
+        formulario = self.fix_str(formulario, "descripcion")
+
+        formulario = self.fix_int(formulario, "id_cliente")
+        formulario = self.fix_bool(formulario, "enviar_a_domicilio")
+        formulario = self.fix_int(formulario, "id_producto")
+        formulario = self.fix_str(formulario, "fecha_entrega")
+
+        formulario = self.fix_str(formulario, "fecha_compra")
+        formulario = self.fix_str(formulario, "fecha_entregado")
+
+        formulario = self.fix_int(formulario, "tipo_materia")
+        formulario = self.fix_int(formulario, "cantidad")
+
+        formulario = self.fix_int(formulario, "cantidad_recibida")
+        formulario = self.fix_str(formulario, "fecha_llegada")
         return formulario
 
     def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict) -> dict:
