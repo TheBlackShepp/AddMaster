@@ -199,10 +199,10 @@ class Usuario(Persona):
 
     # endregion
     def same_credentials(self, formulario: dict) -> bool:
-        result: bool = True
+        result: bool = False
         if self._password == formulario['email']:
             if self._password == formulario['password']:
-                result = False
+                result = True
         return result
 
     def formulario(self, formulario: dict):
