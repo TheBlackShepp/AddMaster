@@ -353,6 +353,7 @@ class DatabaseController(DebugClass):
 
     def get_datos_pedido(self, formulario: dict) -> dict:
         result: dict = {}
+        print(formulario["id"])
         pos: int = self.get_pos_id_pedido(formulario["id"])
         if self.__control_variables.variable_correcta_int(pos):
             result.update(self.__pedido_list[pos].__dict__())
