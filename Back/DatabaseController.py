@@ -107,25 +107,39 @@ class DatabaseController(DebugClass):
             print(f"No hay file '{self.__pedido_name}.db' aun")
 
     def save_all(self):
-        json_users = \
-            dumps({self.__user_name: [ob.__dict__() for ob in self.__user_list], "id": self.__last_user_id})
+        self.save_productos()
+        self.save_users()
+        self.save_clients()
+        self.save_materias()
+        self.save_pedidos()
+
+    def save_productos(self):
         json_productos = \
             dumps({self.__producto_name: [ob.__dict__() for ob in self.__producto_list], "id": self.__last_producto_id})
-        json_clients = \
-            dumps({self.__client_name: [ob.__dict__() for ob in self.__client_list], "id": self.__last_client_id})
-        json_materias = \
-            dumps({self.__materia_prima_name: [ob.__dict__() for ob in self.__materia_prima_list], "id": self.__last_materia_prima_id})
-        json_pedidos = \
-            dumps({self.__pedido_name: [ob.__dict__() for ob in self.__pedido_list], "id": self.__last_pedido_id})
-
-        with open(f'{self.__user_name}.db', 'w') as outfile:
-            dump(json_users, outfile)
         with open(f'{self.__producto_name}.db', 'w') as outfile:
             dump(json_productos, outfile)
+
+    def save_users(self):
+        json_users = \
+            dumps({self.__user_name: [ob.__dict__() for ob in self.__user_list], "id": self.__last_user_id})
+        with open(f'{self.__user_name}.db', 'w') as outfile:
+            dump(json_users, outfile)
+
+    def save_clients(self):
+        json_clients = \
+            dumps({self.__client_name: [ob.__dict__() for ob in self.__client_list], "id": self.__last_client_id})
         with open(f'{self.__client_name}.db', 'w') as outfile:
             dump(json_clients, outfile)
+
+    def save_materias(self):
+        json_materias = \
+            dumps({self.__materia_prima_name: [ob.__dict__() for ob in self.__materia_prima_list], "id": self.__last_materia_prima_id})
         with open(f'{self.__materia_prima_name}.db', 'w') as outfile:
             dump(json_materias, outfile)
+
+    def save_pedidos(self):
+        json_pedidos = \
+            dumps({self.__pedido_name: [ob.__dict__() for ob in self.__pedido_list], "id": self.__last_pedido_id})
         with open(f'{self.__pedido_name}.db', 'w') as outfile:
             dump(json_pedidos, outfile)
 
@@ -145,6 +159,7 @@ class DatabaseController(DebugClass):
         p.formulario(formulario)
         self.__producto_list.append(p)
         self.__last_producto_id += 1
+        self.save_productos()
 
     def modificar_datos_producto(self, formulario: dict) -> bool:
         result: bool = False
@@ -152,6 +167,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             self.__producto_list[pos].formulario(formulario)
+            self.save_productos()
         return result
 
     def get_datos_producto(self, id_producto: int) -> dict:
@@ -179,6 +195,7 @@ class DatabaseController(DebugClass):
         c.formulario(formulario)
         self.__client_list.append(c)
         self.__last_client_id += 1
+        self.save_clients()
 
     def dar_baja_cliente(self, id_cliente: int) -> bool:
         result: bool = False
@@ -186,6 +203,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             del self.__client_list[pos]
+            self.save_clients()
         return result
 
     def modificar_datos_cliente(self, formulario: dict) -> bool:
@@ -195,6 +213,7 @@ class DatabaseController(DebugClass):
             result = True
             formulario.update({"pedidos": self.__client_list[pos].pedidos})
             self.__client_list[pos].formulario(formulario)
+            self.save_clients()
         return result
 
     def get_datos_cliente(self, id_cliente: int) -> dict:
@@ -230,6 +249,7 @@ class DatabaseController(DebugClass):
         u.formulario(formulario)
         self.__user_list.append(u)
         self.__last_user_id += 1
+        self.save_users()
 
     def remove_user(self, id_usuario: int) -> bool:
         """
@@ -242,6 +262,7 @@ class DatabaseController(DebugClass):
             if self.__control_variables.variable_correcta_int(pos):
                 result = True
                 del self.__user_list[pos]
+                self.save_users()
         return result
 
     def modificar_datos_user(self, id_usuario: int, formulario: dict) -> bool:
@@ -262,6 +283,7 @@ class DatabaseController(DebugClass):
             # En caso contrario, los restauramos a los anteriores
             if id_usuario != 0:
                 self.__user_list[pos].acceso = TipoUsuario(old_tipo)
+            self.save_users()
         return result
 
     def get_datos_user(self, id_usuario: int) -> dict:
@@ -303,6 +325,7 @@ class DatabaseController(DebugClass):
         p.formulario(formulario)
         self.__pedido_list.append(p)
         self.__last_pedido_id += 1
+        self.save_pedidos()
 
     def modificar_datos_pedido(self, formulario: dict) -> bool:
         result: bool = False
@@ -310,6 +333,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             self.__pedido_list[pos].formulario(formulario)
+            self.save_pedidos()
         return result
 
     def eliminar_pedido(self, id_pedido_detalle: int) -> bool:
@@ -318,6 +342,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             del self.__pedido_list[pos]
+            self.save_pedidos()
         return result
 
     def get_datos_pedido(self, id_pedido_detalle: int) -> dict:
@@ -344,6 +369,7 @@ class DatabaseController(DebugClass):
         m.formulario(formulario)
         self.__materia_prima_list.append(m)
         self.__last_materia_prima_id += 1
+        self.save_materias()
 
     def modificar_datos_materia_prima(self, formulario: dict) -> bool:
         result: bool = False
@@ -351,6 +377,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             self.__materia_prima_list[pos].formulario(formulario)
+            self.save_materias()
         return result
 
     def eliminar_materia_prima(self, id_materia_prima: int) -> bool:
@@ -359,6 +386,7 @@ class DatabaseController(DebugClass):
         if self.__control_variables.variable_correcta_int(pos):
             result = True
             del self.__materia_prima_list[pos]
+            self.save_materias()
         return result
 
     def get_datos_materia_prima(self, id_materia_prima: int) -> dict:

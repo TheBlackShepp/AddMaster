@@ -229,7 +229,7 @@ class CoreReservas(CoreBase):
         return result"""
         return \
             self.general_modify(
-                self.comprobar_datos_cliente, database_controller.modificar_datos_producto, id_usuario, formulario)
+                self.comprobar_datos_producto, database_controller.modificar_datos_producto, id_usuario, formulario)
 
     def get_datos_producto(self, id_usuario: int, formulario: dict) -> dict:
         """
@@ -483,7 +483,7 @@ class CoreReservas(CoreBase):
     def modificar_datos_pedido(self, id_usuario: int, formulario: dict) -> dict:
         return \
             self.general_modify(
-                self.comprobar_datos_cliente, database_controller.modificar_datos_pedido, id_usuario, formulario)
+                self.comprobar_datos_pedido, database_controller.modificar_datos_pedido, id_usuario, formulario)
 
     def get_datos_pedido(self, id_usuario: int, formulario: dict) -> dict:
         """
