@@ -109,13 +109,13 @@ class DetalleMateriaPrima(MateriaPrima):
 
     # endregion
     def formulario(self, formulario: dict):
-        super(MateriaPrima, self).formulario(formulario)
+        super(DetalleMateriaPrima, self).formulario(formulario)
         self._registro = formulario["registro"]
         self._cantidad_recibida = formulario["cantidad_recibida"]
         self._fecha_llegada = formulario["fecha_llegada"]
 
     def __dict__(self) -> dict:
-        dict_json: dict = super(MateriaPrima, self).__dict__()
+        dict_json: dict = super(DetalleMateriaPrima, self).__dict__()
         dict_json.update({
             "registro": self._registro,
             "cantidad_recibida": self._cantidad_recibida,

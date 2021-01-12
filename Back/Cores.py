@@ -57,6 +57,10 @@ class CoreBase:
             l: list = formulario.get('enviar_a_domicilio')
             if l.__len__() > 0:
                 formulario.update({"enviar_a_domicilio": bool(l[0])})
+        if formulario.get('cantidad_recibida') is not None:
+            l: list = formulario.get('cantidad_recibida')
+            if l.__len__() > 0:
+                formulario.update({"cantidad_recibida": int(l[0])})
         return formulario
 
     def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict) -> dict:
