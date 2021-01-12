@@ -147,7 +147,7 @@ class DatabaseController(DebugClass):
         result: int = -1
         for i in range(l.__len__()):
             if l[i].id == id_object:
-                result = i
+                result = l[i].id
                 break
         return result
 
