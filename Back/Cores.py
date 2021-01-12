@@ -65,6 +65,10 @@ class CoreBase:
             l: list = formulario.get('password')
             if l.__len__() > 0:
                 formulario.update({"password": l[0]})
+        if formulario.get('acceso') is not None:
+            l: list = formulario.get('acceso')
+            if l.__len__() > 0:
+                formulario.update({"acceso": int(l[0])})
         return formulario
 
     def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict) -> dict:
