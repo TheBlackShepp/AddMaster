@@ -1,0 +1,1 @@
+"{\"products\": [{\"id\": 0, \"nombre\": \"Producto 1 modificado\", \"cantidad\": 999, \"precio\": 100, \"fecha_inicio_venta\": \"2021-01-09\", \"fecha_fin_venta\": \"2021-01-09\", \"etiquetas\": [\"Etiqueta 1,Etiqueta 2,Etiqueta 3\"], \"descripcion\": \"No hay mucho que poner en un producto ficticio\"}], \"id\": 1}"

@@ -135,15 +135,18 @@ const makePost = async(url, datos) => {
 
 // pintar productos
 const makeCardProduct = (product) => {
+
+    let listImg = ['vino_mujercanon.jpg', 'vino_valbuena.jpg']
+
     return `
         <div class="max-w-md w-full lg:flex shadow cursor-pointer" onclick="viewDetailsProduct(1)">
             <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" title="Woman holding a mug">
-            <img class="w-full h-full object-cover" src="/static/img/${product.img}" alt="vino">
+            <img class="w-full h-full object-cover" src="/static/img/${listImg[Math.random()]}" alt="vino">
             </div>
             <div class="bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div class="mb-8">
-                <div class="text-black font-bold text-xl mb-2">${product.name}</div>
-                <p class="text-grey-darker text-base">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.</p>
+                <div class="text-black font-bold text-xl mb-2">${product.nombre}</div>
+                <p class="text-grey-darker text-base">${product.descripcion}</p>
             </div>
 
             </div>

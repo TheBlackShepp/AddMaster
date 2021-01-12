@@ -109,6 +109,9 @@ def login():
             if control_variables.variable_correcta_int(id_usuario):
                 # Generamos un cookie
                 cookie = controlador_cookies.generar_cookie(id_usuario)
+                
+                print('COOKIE', cookie, id_usuario)
+                
                 resultado = homehtml(cookie, False, sesion_control.get_tipo_usuario(id_usuario))
             # Si las credenciales no son correctas, lo reenviamos al login
             else:
