@@ -428,9 +428,6 @@ class CoreBodega(CoreBase):
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
     # endregion
-    # region Materia Prima
-
-    # endregion
     # region Usuarios
     def ingresar_usuario(self, id_usuario: int, formulario: dict) -> dict:
         """

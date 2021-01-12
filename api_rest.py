@@ -158,7 +158,6 @@ def get_datos_producto():
 
 @app.route("/get_lista_productos", methods=["POST"])
 def get_lista_productos():
-    print('ENTRA POR AQUI')
     return easy_function(request.cookies, core_reservas.get_datos_producto)
 
 
@@ -205,6 +204,9 @@ def modificar_usuario():
 def get_datos_usuario():
     return easy_function(request.cookies, core_bodega.get_datos_usuario, request.form.to_dict(flat=False))
 
+
+# endregion
+# region Materia Prima
 
 # endregion
 
