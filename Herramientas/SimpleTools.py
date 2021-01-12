@@ -44,12 +44,9 @@ class ControlVariables:
         """
         Devuelve true si el numero es mayor o igual a 0 y no es None
         """
-        if var is None:
+        resultado: bool = True
+        if var is None or var < 0:
             resultado = False
-        elif var < 0:
-            resultado = False
-        else:
-            resultado = True
         return resultado
 
     def variable_correcta_list(self, var: list) -> bool:

@@ -35,6 +35,25 @@ def homehtml(cookie, expire: bool, tipo: TipoUsuario) -> any:
 
 
 # endregion
+# region Otras funciones
+def easy_function(cookie_jar, lambda_func, param=None) -> any:
+    resultado = None
+    cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(cookie_jar)
+    # Si no tiene cookie
+    if cookiesesion is None:
+        abort(404, "Cookie not found")
+    # Si tiene cookie pero no es valida
+    elif controlador_cookies.contiene_cookie(cookiesesion) is False:
+        abort(404, "Cookie not valid")
+    # Si tiene cookie y es valida
+    else:
+        id_usuario = controlador_cookies.get_id(cookiesesion)
+        resultado = lambda_func(id_usuario, param)
+    return resultado
+
+
+# endregion
+# region Paginas
 @app.route('/', methods=["GET"])
 def index_i():
     return redirect("/index")
@@ -55,6 +74,7 @@ def index():
         id_usuario = controlador_cookies.get_id(cookiesesion)
         resultado = homehtml(None, False, sesion_control.get_tipo_usuario(id_usuario))
     return resultado
+
 
 @app.route('/index/<path:subpath>', methods=["GET"])
 def dashboardSubPath(subpath):
@@ -99,14 +119,89 @@ def login():
     return resultado
 
 
+# endregion
+# region Posts
+# region Producto
 @app.route("/igresar_datos_producto", methods=["POST"])
 def igresar_datos_producto():
+    """@app.route("/igresar_datos_producto", methods=["POST"])
+    def igresar_datos_producto():
+        resultado = None
+        cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
+        # Si no tiene cookie
+        if cookiesesion is None:
+            abort(404, "Cookie not found")
+        # Si tiene cookie pero no es valida
+        elif controlador_cookies.contiene_cookie(cookiesesion) is False:
+            abort(404, "Cookie not valid")
+        # Si tiene cookie y es valida
+        else:
+            id_usuario = controlador_cookies.get_id(cookiesesion)
+            resultado = core_reservas.igresar_datos_producto(id_usuario, request.form)
+        return resultado"""
+    return easy_function(request.cookies, core_reservas.igresar_datos_producto, request.form.to_dict(flat=False))
 
 
+@app.route("/modificar_datos_producto", methods=["POST"])
+def modificar_datos_producto():
+    return easy_function(request.cookies, core_reservas.modificar_datos_producto, request.form.to_dict(flat=False))
 
 
-    print(type(request.form))
-    return "http://0.0.0.0:8080"
+@app.route("/get_datos_producto", methods=["POST"])
+def get_datos_producto():
+    return easy_function(request.cookies, core_reservas.get_datos_producto, request.form.to_dict(flat=False))
+
+
+@app.route("/get_lista_productos", methods=["POST"])
+def get_lista_productos():
+    return easy_function(request.cookies, core_reservas.get_datos_producto)
+
+
+# endregion
+# region Clientes
+@app.route("/dar_alta_cliente", methods=["POST"])
+def dar_alta_cliente():
+    return easy_function(request.cookies, core_reservas.dar_alta_cliente, request.form.to_dict(flat=False))
+
+
+@app.route("/dar_baja_cliente", methods=["POST"])
+def dar_baja_cliente():
+    return easy_function(request.cookies, core_reservas.dar_baja_cliente, request.form.to_dict(flat=False))
+
+
+@app.route("/modificar_datos_cliente", methods=["POST"])
+def modificar_datos_cliente():
+    return easy_function(request.cookies, core_reservas.modificar_datos_cliente, request.form.to_dict(flat=False))
+
+
+@app.route("/get_datos_cliente", methods=["POST"])
+def get_datos_cliente():
+    return easy_function(request.cookies, core_reservas.get_datos_cliente, request.form.to_dict(flat=False))
+
+
+# endregion
+# region Usuarios
+@app.route("/ingresar_usuario", methods=["POST"])
+def ingresar_usuario():
+    return easy_function(request.cookies, core_bodega.ingresar_usuario, request.form.to_dict(flat=False))
+
+
+@app.route("/eliminar_usuario", methods=["POST"])
+def eliminar_usuario():
+    return easy_function(request.cookies, core_bodega.eliminar_usuario, request.form.to_dict(flat=False))
+
+
+@app.route("/modificar_usuario", methods=["POST"])
+def modificar_usuario():
+    return easy_function(request.cookies, core_bodega.modificar_usuario, request.form.to_dict(flat=False))
+
+
+@app.route("/get_datos_usuario", methods=["POST"])
+def get_datos_usuario():
+    return easy_function(request.cookies, core_bodega.get_datos_usuario, request.form.to_dict(flat=False))
+
+
+# endregion
 
 
 if __name__ == '__main__':

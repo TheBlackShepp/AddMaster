@@ -24,10 +24,10 @@ class CoreBase:
         resultado: bool = False
         if self._control_variables.variable_correcta_int(id_usuario) is False:
             resultado = False
-        elif self._tipo_de_core == TipoCore.CoreBodega:
+        elif self._tipo_de_core == TipoCore.CoreReservas:
             tipo = database_controller.get_user_permission(id_usuario)
             resultado = tipo == TipoUsuario.Personal or tipo == TipoUsuario.Dolores
-        elif self._tipo_de_core == TipoCore.CoreReservas:
+        elif self._tipo_de_core == TipoCore.CoreBodega:
             tipo = database_controller.get_user_permission(id_usuario)
             resultado = tipo == TipoUsuario.Administrativo or tipo == TipoUsuario.Dolores
         elif self._tipo_de_core == TipoCore.Sesion:
@@ -48,6 +48,14 @@ class CoreBase:
     def get_tipo_usuario(self, id_usuario: int) -> TipoUsuario:
         return database_controller.get_user_permission(id_usuario)
 
+    def form_to_id(self, formulario: dict) -> int:
+        result: int = -1
+        if formulario.get('id') is None:
+            l: list = formulario.get('id')
+            if l.__len__() > 0:
+                result = int(l[0])
+        return result
+
     # endregion
     def __init__(self, tipo: TipoCore):
         self._tipo_de_core = tipo
@@ -59,15 +67,22 @@ class CoreReservas(CoreBase):
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """
-        li = ["nombre", "cantidad", "precio", "fecha_inicio_venta", "fecha_fin_venta", "etiquetas", "descripcion"]
+        li = ["id", "nombre", "cantidad", "precio", "fecha_inicio_venta", "fecha_fin_venta", "etiquetas", "descripcion"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
     def comprobar_datos_cliente(self, formulario: dict) -> bool:
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """
-        li = ["email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio", "sexo",
-              "acceso"]
+        li = ["id", "email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio",
+              "sexo"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def comprobar_datos_pedido(self, formulario: dict) -> bool:
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li = ["id", "id_cliente", "enviar_a_domicilio", "id_producto", "fecha_entrega"]
         return self._control_variables.contains_all_list_in_dict(formulario, li)
 
     # endregion
@@ -97,7 +112,7 @@ class CoreReservas(CoreBase):
             result.update(self.get_dict_params(False))
         return result
 
-    def modificar_datos_producto(self, id_usuario: int, id_producto: int, formulario: dict) -> dict:
+    def modificar_datos_producto(self, id_usuario: int, formulario: dict) -> dict:
         """
         Modifica los datos de un producto al core Reservas
         Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
@@ -115,14 +130,14 @@ class CoreReservas(CoreBase):
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
                 result.update(self.get_dict_resultado(
-                    database_controller.modificar_datos_producto(id_producto, formulario)))
+                    database_controller.modificar_datos_producto(formulario)))
             else:
                 result.update(self.get_dict_permission(False))
         else:
             result.update(self.get_dict_params(False))
         return result
 
-    def get_datos_producto(self, id_usuario: int, id_producto: int) -> dict:
+    def get_datos_producto(self, id_usuario: int, formulario: dict) -> dict:
         """
         Obtiene los datos de un producto en un diccionario
         Segun los datos recibidos:
@@ -132,11 +147,36 @@ class CoreReservas(CoreBase):
             params False: Los datos recibidos no estan en formato correcto
         """
         result: dict = {}
-        if self._control_variables.variable_correcta_list_int([id_usuario, id_producto]):
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
-                d = database_controller.get_datos_producto(id_producto)
+                d = database_controller.get_datos_producto(self.form_to_id(formulario))
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def get_lista_productos(self, id_usuario: int) -> dict:
+        """
+        Obtiene los datos de todos los productos en una lista de diccionarios
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_lista_productos()
                 if d.__len__() == 0:
                     result.update(self.get_dict_params(False))
                 else:
@@ -174,7 +214,7 @@ class CoreReservas(CoreBase):
             result.update(self.get_dict_params(False))
         return result
 
-    def dar_baja_cliente(self, id_usuario: int, id_cliente: int) -> dict:
+    def dar_baja_cliente(self, id_usuario: int, formulario: dict) -> dict:
         """
         Da de baja a un cliente
         Segun los datos recibidos:
@@ -186,19 +226,19 @@ class CoreReservas(CoreBase):
             post_result False: No se ha eliminado el cliente, ya que probablemente no exista
         """
         result: dict = {}
-        if self._control_variables.variable_correcta_list_int([id_usuario, id_cliente]):
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
                 result.update(self.get_dict_resultado(
-                    database_controller.dar_baja_cliente(id_cliente)))
+                    database_controller.dar_baja_cliente(self.form_to_id(formulario))))
             else:
                 result.update(self.get_dict_permission(False))
         else:
             result.update(self.get_dict_params(False))
         return result
 
-    def modificar_datos_cliente(self, id_usuario: int, id_cliente: int, formulario: dict):
+    def modificar_datos_cliente(self, id_usuario: int, formulario: dict):
         """
         Modifica los datos de un cliente
         Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
@@ -211,20 +251,19 @@ class CoreReservas(CoreBase):
             post_result False: No se han creado o modificado los datos de un producto
         """
         result: dict = {}
-        if self.comprobar_datos_cliente(formulario) and \
-                self._control_variables.variable_correcta_list_int([id_usuario, id_cliente]):
+        if self.comprobar_datos_cliente(formulario) and self._control_variables.variable_correcta_int(id_usuario):
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
                 result.update(self.get_dict_resultado(
-                    database_controller.modificar_datos_cliente(id_cliente, formulario)))
+                    database_controller.modificar_datos_cliente(formulario)))
             else:
                 result.update(self.get_dict_permission(False))
         else:
             result.update(self.get_dict_params(False))
         return result
 
-    def get_datos_cliente(self, id_usuario: int, id_cliente: int) -> dict:
+    def get_datos_cliente(self, id_usuario: int, formulario: dict) -> dict:
         """
         Obtiene los datos de un cliente
         Segun los datos recibidos:
@@ -234,11 +273,116 @@ class CoreReservas(CoreBase):
             params False: Los datos recibidos no estan en formato correcto
         """
         result: dict = {}
-        if self._control_variables.variable_correcta_list_int([id_usuario, id_cliente]):
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
                 result.update(self.get_dict_permission(True))
-                d = database_controller.get_datos_cliente(id_cliente)
+                d = database_controller.get_datos_cliente(self.form_to_id(formulario))
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    # endregion
+    # region Pedido
+    def igresar_datos_pedido(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Ingresa los datos de un pedido
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_datos_pedido(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                database_controller.igresar_datos_pedido(formulario)
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def modificar_datos_pedido(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Modifica los datos de un pedido al core Reservas
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_datos_pedido(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(
+                    database_controller.modificar_datos_pedido(formulario)))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def eliminar_pedido(self, id_usuario: int, id_pedido: int) -> dict:
+        pass
+
+    def get_datos_pedido_detalle(self, id_usuario: int, id_producto: int) -> dict:
+        """
+        Obtiene los datos de un producto en un diccionario
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_list_int([id_usuario, id_producto]):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_datos_producto(id_producto)
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def get_lista_productos(self, id_usuario: int) -> dict:
+        """
+        Obtiene los datos de todos los productos en una lista de diccionarios
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_lista_productos()
                 if d.__len__() == 0:
                     result.update(self.get_dict_params(False))
                 else:
@@ -256,11 +400,265 @@ class CoreReservas(CoreBase):
 
 class CoreBodega(CoreBase):
     # region Comprobaciones
+    def comprobar_datos_usuario(self, id_usuario: int, formulario: dict) -> bool:
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li: list = []
+        if id_usuario == 0:
+            li = ["id", "email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio",
+                  "sexo", "acceso"]
+        else:
+            li = ["id", "email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio",
+                  "sexo"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def comprobar_datos_materia_prima(self, formulario: dict) -> bool:
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li = ["id", "tipo_materia", "cantidad"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
+
+    def comprobar_datos_detalle_materia_prima(self, formulario: dict) -> bool:
+        """
+        Compruba si los datos del formulario recibido posee o no los dotos necesarios
+        """
+        li = ["id", "tipo_materia", "cantidad", "registro", "cantidad_recibida", "fecha_llegada"]
+        return self._control_variables.contains_all_list_in_dict(formulario, li)
 
     # endregion
     # region Materia Prima
+
     # endregion
-    # region Personal
+    # region Usuarios
+    def ingresar_usuario(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Añade un nuevo cliente a la lista
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        # Si es un usuario valido
+        if self._control_variables.variable_correcta_int(id_usuario) and \
+                self.comprobar_datos_usuario(id_usuario, formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                database_controller.add_new_user(id_usuario, formulario)
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def eliminar_usuario(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Elimina un usuario de la base de datos
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se ha eliminado el cliente con exito
+            post_result False: No se ha eliminado el cliente, ya que probablemente no exista
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(
+                    database_controller.remove_user(self.form_to_id(formulario))))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def modificar_usuario(self, id_usuario: int, formulario: dict):
+        """
+        Modifica los datos de un usuario
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_datos_usuario(id_usuario, formulario) and \
+                self._control_variables.variable_correcta_int(id_usuario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(
+                    database_controller.modificar_datos_user(id_usuario, formulario)))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def get_datos_usuario(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Obtiene los datos de un usuario
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_datos_user(self.form_to_id(formulario))
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    # endregion
+    # region Materia Prima
+    def igresar_datos_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Ingresa los datos de un producto
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_datos_materia_prima(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                database_controller.igresar_datos_materia_prima(formulario)
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    """def modificar_datos_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
+        Modifica los datos de un producto al core Reservas
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        result: dict = {}
+        if self.comprobar_datos_producto(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                result.update(self.get_dict_resultado(
+                    database_controller.modificar_datos_producto(formulario)))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result"""
+
+    def get_datos_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Obtiene los datos de una materia prima en un diccionario
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario) and self.form_to_id(formulario) != -1:
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_datos_materia_prima(self.form_to_id(formulario))
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def get_lista_materia_prima(self, id_usuario: int) -> dict:
+        """
+        Obtiene los datos de todos las materias primas en una lista de diccionarios
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+        """
+        result: dict = {}
+        if self._control_variables.variable_correcta_int(id_usuario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                d = database_controller.get_lista_materia_prima()
+                if d.__len__() == 0:
+                    result.update(self.get_dict_params(False))
+                else:
+                    result.update(d)
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
+    def igresar_datos_detalle_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
+        """
+        Ingresa los datos de un producto
+        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
+        Segun los datos recibidos:
+            permission True: Se puede acceder a esta funcionalidad con el id_persona
+            permission False: No se puede acceder a esta funcionalidad con el id_persona
+            params True: Los datos recibidos estan en formato correcto
+            params False: Los datos recibidos no estan en formato correcto
+            post_result True: Se han creado o modificado los datos de un producto
+            post_result False: No se han creado o modificado los datos de un producto
+        """
+        result: dict = {}
+        if self.comprobar_datos_materia_prima(formulario):
+            result.update(self.get_dict_params(True))
+            if self.user_have_permission(id_usuario):
+                result.update(self.get_dict_permission(True))
+                database_controller.igresar_datos_materia_prima(formulario)
+                result.update(self.get_dict_resultado(True))
+            else:
+                result.update(self.get_dict_permission(False))
+        else:
+            result.update(self.get_dict_params(False))
+        return result
+
     # endregion
     def __init__(self):
         super().__init__(TipoCore.CoreBodega)
@@ -289,11 +687,106 @@ class CoreSeesion(CoreBase):
         return result
 
 
+productoTest1 = {
+    'id': 0,
+    'nombre': 'Producto 1 modificado',
+    'cantidad': 999,
+    "precio": 100,
+    'fecha_inicio_venta': '2021-01-09',
+    'fecha_fin_venta': '2021-01-09',
+    'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'],
+    'descripcion': 'No hay mucho que poner en un producto ficticio'
+}
+clienteTest = {
+    "id": 0,
+    "email": "clienteTest1@gmail.com",
+    "nombre": "Nombre Cliente",
+    "apellido": "Apellido 1",
+    "apellido2": "Apellido 2",
+    "telefono": "666666666",
+    "edad": 99,
+    "fecha_nacimiento": date.today().__str__(),
+    "domicilio": "None",
+    "sexo": "X"
+}
+usuarioTest = {
+    "id": 0,
+
+    "email": "usuarioTest@gmail.com",
+    "nombre": "Nombre Usuario Administrativo",
+    "apellido": "Apellido 1",
+    "apellido2": "Apellido 2",
+    "telefono": "666666666",
+    "edad": 99,
+    "fecha_nacimiento": date.today().__str__(),
+    "domicilio": "None",
+    "sexo": "X",
+    
+    "acceso": TipoUsuario.Administrativo.value,
+    "password": "Password1"
+}
 
 
+"""
+c_s = CoreSeesion()
+print(f'ID: {c_s.iniciar_sesion({"email": "dolores@gmail.com", "password": "Password1"})}')
+print(f'Tipo usaurio: {c_s.get_tipo_usuario(0)}')
+"""
+#c_r = CoreReservas()
+# region Tests Productos
+#print("Producto:", c_r.igresar_datos_producto(0, productoTest1))  # {'params': True, 'permission': True, 'post_result': True}
+#print("Producto:", c_r.get_datos_producto(0, 0))    # {'params': True, 'permission': True, 'id': 0, 'nombre': 'Producto 1 modificado', 'cantidad': 999, 'precio': 100, 'fecha_inicio_venta': '2021-01-09', 'fecha_fin_venta': '2021-01-09', 'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'], 'descripcion': 'No hay mucho que poner en un producto ficticio'}
+#print("Producto:", c_r.get_datos_producto(0, 1))    # {'params': False, 'permission': True}
+"""
+productoTest1.update({"nombre": "Producto 1 renamed"})
+print("Result:", c_r.modificar_datos_producto(0, productoTest1))  # {'params': True, 'permission': True, 'id': 0, 'nombre': 'Producto 1 renamed', 'cantidad': 999, 'precio': 100, 'fecha_inicio_venta': '2021-01-09', 'fecha_fin_venta': '2021-01-09', 'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'], 'descripcion': 'No hay mucho que poner en un producto ficticio'}
+print("Producto:", c_r.get_datos_producto(0, 0))
+"""
+# print("Resultado:", c_r.get_lista_productos(0))
+# endregion
+# region Tests Clientes
+"""
+print("Cliente: ", c_r.get_datos_cliente(0, 0))
+print("Alta: ", c_r.dar_alta_cliente(0, clienteTest))
+print("Cliente: ", c_r.get_datos_cliente(0, 0))
+"""
+"""
+print("Alta: ", c_r.dar_alta_cliente(0, clienteTest))
+clienteTest.update({"nombre": "Cliente a eliminar"})
+print("Alta: ", c_r.dar_alta_cliente(0, clienteTest))
+print("Cliente: ", c_r.get_datos_cliente(0, 0))
+print("Cliente: ", c_r.get_datos_cliente(0, 1))
+print("Result: ", c_r.dar_baja_cliente(0, 1))
+"""
+"""
+print("Alta: ", c_r.dar_alta_cliente(0, clienteTest))
+print("Alta: ", c_r.dar_alta_cliente(0, clienteTest))
+print("Result: ", c_r.dar_baja_cliente(0, 1))
+print("Result: ", c_r.dar_baja_cliente(0, 1))
+"""
+# print("Cliente: ", c_r.get_datos_cliente(0, 0))
+"""
+clienteTest.update({"nombre": "Cliente a eliminar"})
+print("Modify: ", c_r.modificar_datos_cliente(0, clienteTest))
+"""
+# endregion
 
-#c = CoreReservas()
-"""print(c.get_datos_producto(0, 0))
+#c_b = CoreBodega()
+# region Personal
+"""#print("Ingreso: ", c_b.ingresar_usuario(0, usuarioTest))
+# print("Eliminado", c_b.eliminar_personal(0, 3))
+print("User: ", c_b.get_datos_usuario(0, 1))
+usuarioTest.update({"id": 1})
+usuarioTest.update({"apellido2": "Willyx"})
+print("Modificar: ", c_b.modificar_usuario(0, usuarioTest))
+print("User: ", c_b.get_datos_usuario(0, 1))"""
+# endregion
+
+
+#database_controller.save_all()
+
+"""
+print(c.get_datos_producto(0, 0))
 print(c.modificar_datos_producto(0, 0, {
     "nombre": "Producto 1 modificado",
     "cantidad": 999,
@@ -314,18 +807,4 @@ print(c.modificar_datos_producto(0, 0, {
     "domicilio": "Noooo!",
     "sexo": "M"
 }))"""
-#database_controller.save_all()
 
-
-
-
-
-"""from requests import get, post
-
-
-r = post(url="http://127.0.0.1:8080/igresar_datos_producto", data={"patata": "1", "p": "2"})
-if r.status_code == 200:
-    print(r.text)"""
-"""r = get(url="http://127.0.0.1:8080")
-if r.status_code == 200:
-    print(r.text)"""

@@ -35,11 +35,23 @@ class MateriaPrima(IDClass):
         self._cantidad = value
 
     # endregion
+    def formulario(self, formulario: dict):
+        super(MateriaPrima, self).formulario(formulario)
+        self._tipo_materia = formulario["tipo_materia"]
+        self._cantidad = formulario["cantidad"]
+
+    def __dict__(self) -> dict:
+        dict_json: dict = super(MateriaPrima, self).__dict__()
+        dict_json.update({
+            "tipo_materia": self._tipo_materia.value,
+            "cantidad": self._cantidad
+        })
+        return dict_json
 
 
 class DetalleMateriaPrima(MateriaPrima):
     # region Variables
-    _registro: dict    # date(fecha_llegada): int(cantidad)
+    _registro: dict    # str fecha_llegada: int(cantidad)
     _cantidad_recibida: int
     _fecha_llegada: str
 
@@ -96,3 +108,17 @@ class DetalleMateriaPrima(MateriaPrima):
         self._registro.update({key: cantidad})
 
     # endregion
+    def formulario(self, formulario: dict):
+        super(MateriaPrima, self).formulario(formulario)
+        self._registro = formulario["registro"]
+        self._cantidad_recibida = formulario["cantidad_recibida"]
+        self._fecha_llegada = formulario["fecha_llegada"]
+
+    def __dict__(self) -> dict:
+        dict_json: dict = super(MateriaPrima, self).__dict__()
+        dict_json.update({
+            "registro": self._registro,
+            "cantidad_recibida": self._cantidad_recibida,
+            "fecha_llegada": self._fecha_llegada
+        })
+        return dict_json

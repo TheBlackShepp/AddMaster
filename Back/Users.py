@@ -237,6 +237,14 @@ class Cliente(Persona):
 
     # endregion
     # region List
+    @property
+    def pedidos(self) -> list:
+        return self._pedidos
+
+    @pedidos.setter
+    def pedidos(self, value: list):
+        self._pedidos = value
+
     def pedidos_len(self) -> int:
         return self._pedidos.__len__()
 

@@ -822,7 +822,7 @@
 											"top": 214,
 											"width": 127.1689453125,
 											"height": 13,
-											"text": "#cliente: Cliente",
+											"text": "#id_cliente: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -856,7 +856,7 @@
 											"top": 244,
 											"width": 127.1689453125,
 											"height": 13,
-											"text": "#producto: Producto",
+											"text": "#id_producto: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7334,11 +7334,9 @@
 							"_parent": {
 								"$ref": "AAAAAAF2caP/ZArzRFQ="
 							},
-							"name": "cliente",
+							"name": "id_cliente",
 							"visibility": "protected",
-							"type": {
-								"$ref": "AAAAAAF2caPZTArIJvo="
-							}
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -7356,11 +7354,9 @@
 							"_parent": {
 								"$ref": "AAAAAAF2caP/ZArzRFQ="
 							},
-							"name": "producto",
+							"name": "id_producto",
 							"visibility": "protected",
-							"type": {
-								"$ref": "AAAAAAF2caO4bgqdQHk="
-							}
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",

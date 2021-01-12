@@ -1,1 +1,1 @@
-"{\"clients\": [], \"id\": 5}"
+"{\"clients\": [{\"id\": 0, \"email\": \"clienteTest1@gmail.com\", \"nombre\": \"Cliente a eliminar\", \"apellido\": \"Apellido 1\", \"apellido2\": \"Apellido 2\", \"telefono\": \"666666666\", \"edad\": 99, \"fecha_nacimiento\": \"2021-01-12\", \"domicilio\": \"None\", \"sexo\": \"X\", \"pedidos\": []}], \"id\": 2}"

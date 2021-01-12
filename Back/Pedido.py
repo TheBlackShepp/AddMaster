@@ -106,6 +106,7 @@ class Producto(IDClass):
         super(Producto, self).formulario(formulario)
         self._nombre = formulario["nombre"]
         self._cantidad = formulario["cantidad"]
+        self._precio = formulario["precio"]
         self._fecha_inicio_venta = formulario["fecha_inicio_venta"]
         self._fecha_fin_venta = formulario["fecha_fin_venta"]
         self._etiquetas = formulario["etiquetas"]
@@ -116,6 +117,7 @@ class Producto(IDClass):
         dict_json.update({
             "nombre": self._nombre,
             "cantidad": self._cantidad,
+            "precio": self._precio,
             "fecha_inicio_venta": self._fecha_inicio_venta,
             "fecha_fin_venta": self._fecha_fin_venta,
             "etiquetas": self._etiquetas,
@@ -126,30 +128,30 @@ class Producto(IDClass):
 
 class Pedido(IDClass):
     # region Variables
-    _cliente: Cliente
+    _id_cliente: int
     _enviar_a_domicilio: bool
-    _producto: Producto
+    _id_producto: int
     _fecha_entrega: str
 
     # endregion
     # region Operadores
-    def __init__(self, cliente: Cliente, producto: Producto, enviar_a_domicilio: bool = False,
+    def __init__(self, id_cliente: int, id_producto: int, enviar_a_domicilio: bool = False,
                  fecha_entrega: str = "", id: int = -1):
         super().__init__(id=id)
-        self._cliente = cliente
-        self._producto = producto
+        self._id_cliente = id_cliente
+        self._id_producto = id_producto
         self._fecha_entrega = fecha_entrega
         self._enviar_a_domicilio = enviar_a_domicilio
 
     # endregion
     # region Getters
     @property
-    def cliente(self) -> Cliente:
-        return self._cliente
+    def id_cliente(self) -> int:
+        return self._id_cliente
 
     @property
-    def producto(self) -> Producto:
-        return self._producto
+    def id_producto(self) -> int:
+        return self._id_producto
 
     @property
     def enviar_a_domicilio(self) -> bool:
@@ -161,13 +163,13 @@ class Pedido(IDClass):
 
     # endregion
     # region Setters
-    @cliente.setter
-    def cliente(self, value: Cliente):
-        self._cliente = value
+    @id_cliente.setter
+    def id_cliente(self, value: int):
+        self._id_cliente = value
 
-    @producto.setter
-    def producto(self, value: Producto):
-        self._producto = value
+    @id_producto.setter
+    def id_producto(self, value: int):
+        self._id_producto = value
 
     @enviar_a_domicilio.setter
     def enviar_a_domicilio(self, value: bool):
@@ -180,19 +182,17 @@ class Pedido(IDClass):
     # endregion
     def formulario(self, formulario: dict):
         super(Pedido, self).formulario(formulario)
-        self._cliente = Cliente()
-        self._cliente.formulario(formulario["cliente"])
+        self._id_cliente = formulario["id_cliente"]
         self._enviar_a_domicilio = formulario["enviar_a_domicilio"]
-        self._producto = Producto()
-        self._producto.formulario(formulario["producto"])
+        self._id_producto = formulario["id_producto"]
         self._fecha_entrega = formulario["fecha_entrega"]
 
     def __dict__(self) -> dict:
         dict_json: dict = super(Pedido, self).__dict__()
         dict_json.update({
-            "cliente": self._cliente.__dict__(),
+            "id_cliente": self._id_cliente,
             "enviar_a_domicilio": self._enviar_a_domicilio,
-            "producto": self._producto.__dict__(),
+            "id_producto": self._id_producto,
             "fecha_entrega": self._fecha_entrega
         })
         return dict_json
