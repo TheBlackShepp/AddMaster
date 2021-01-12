@@ -318,7 +318,7 @@ class DatabaseController(DebugClass):
         result: int = -1
         for i in range(self.__user_list.__len__()):
             if self.__user_list[i].same_credentials(formulario):
-                result = i
+                result = self.__user_list[i].id
                 break
         return result
 
