@@ -234,14 +234,14 @@ class DatabaseController(DebugClass):
 
     # endregion
     # region Users
-    def add_new_user(self, id_usuario: int, formulario: dict) -> None:
+    def add_new_user(self, formulario: dict) -> None:
         """
         Creamos un usuario con los paramentros recibidos
         Si no se reciben los apramentros correctos dara ERROR
         La password la recibe en claro y la transforma a sha512
         """
         # Si el que añade el usuario no es dolores, el usuario creado es de tipo Administrativo siempre
-        if id_usuario != 0:
+        if formulario["creator"] != 0:
             formulario.update({"acceso": TipoUsuario.Personal.value})
         formulario.update({"id": self.__last_user_id})
         formulario.update({"password": sha3_512(formulario['password'].encode()).hexdigest()})
@@ -265,7 +265,7 @@ class DatabaseController(DebugClass):
                 self.save_users()
         return result
 
-    def modificar_datos_user(self, id_usuario: int, formulario: dict) -> bool:
+    def modificar_datos_user(self, formulario: dict) -> bool:
         """
         Modifica cualquier dato de un usuario menos la contraseña
         Devuelve si se han modificado los datos
@@ -281,7 +281,7 @@ class DatabaseController(DebugClass):
             # Si el usuario que ha intentado cambiar los permisis es dolores
             # Hacemos que se mantengan
             # En caso contrario, los restauramos a los anteriores
-            if id_usuario != 0:
+            if formulario["creator"] != 0:
                 self.__user_list[pos].acceso = TipoUsuario(old_tipo)
             self.save_users()
         return result
