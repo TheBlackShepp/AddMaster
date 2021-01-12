@@ -289,7 +289,7 @@ class CoreReservas(CoreBase):
         return result
 
     # endregion
-    # region Pedido
+    # region Pedido Detalle
     def igresar_datos_pedido(self, id_usuario: int, formulario: dict) -> dict:
         """
         Ingresa los datos de un pedido
@@ -532,8 +532,8 @@ class CoreBodega(CoreBase):
         return result
 
     # endregion
-    # region Materia Prima
-    def igresar_datos_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
+    # region Detalle Materia Prima
+    def igresar_datos_detalle_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
         """
         Ingresa los datos de un producto
         Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
@@ -625,31 +625,6 @@ class CoreBodega(CoreBase):
                     result.update(self.get_dict_params(False))
                 else:
                     result.update(d)
-            else:
-                result.update(self.get_dict_permission(False))
-        else:
-            result.update(self.get_dict_params(False))
-        return result
-
-    def igresar_datos_detalle_materia_prima(self, id_usuario: int, formulario: dict) -> dict:
-        """
-        Ingresa los datos de un producto
-        Precondicion: EL usuario no puede ser -1, sino devuelve que no puede acceder aqui
-        Segun los datos recibidos:
-            permission True: Se puede acceder a esta funcionalidad con el id_persona
-            permission False: No se puede acceder a esta funcionalidad con el id_persona
-            params True: Los datos recibidos estan en formato correcto
-            params False: Los datos recibidos no estan en formato correcto
-            post_result True: Se han creado o modificado los datos de un producto
-            post_result False: No se han creado o modificado los datos de un producto
-        """
-        result: dict = {}
-        if self.comprobar_datos_materia_prima(formulario):
-            result.update(self.get_dict_params(True))
-            if self.user_have_permission(id_usuario):
-                result.update(self.get_dict_permission(True))
-                database_controller.igresar_datos_materia_prima(formulario)
-                result.update(self.get_dict_resultado(True))
             else:
                 result.update(self.get_dict_permission(False))
         else:

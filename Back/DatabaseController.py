@@ -1,7 +1,7 @@
 from Herramientas.SimpleTools import DebugClass, ControlVariables
-from Back.Pedido import Producto
+from Back.Pedido import Producto, PedidoDetalle
 from Back.Users import Usuario, TipoUsuario, Cliente
-from Back.Materia import MateriaPrima
+from Back.Materia import DetalleMateriaPrima
 from json import load, loads, dump, dumps
 from hashlib import sha3_512
 

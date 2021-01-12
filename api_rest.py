@@ -158,7 +158,7 @@ def get_datos_producto():
 
 @app.route("/get_lista_productos", methods=["POST"])
 def get_lista_productos():
-    return easy_function(request.cookies, core_reservas.get_datos_producto)
+    return easy_function(request.cookies, core_reservas.get_lista_productos)
 
 
 # endregion
@@ -209,8 +209,9 @@ def get_datos_usuario():
 # region Materia Prima
 
 # endregion
+# region Pedido
 
-
+# endregion
 if __name__ == '__main__':
     app.run(
         port=8080,
