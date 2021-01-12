@@ -48,7 +48,10 @@ def easy_function(cookie_jar, lambda_func, param=None) -> any:
     # Si tiene cookie y es valida
     else:
         id_usuario = controlador_cookies.get_id(cookiesesion)
-        resultado = lambda_func(id_usuario, param)
+        if param is not None:
+            resultado = lambda_func(id_usuario, param)
+        else:
+            resultado = lambda_func(id_usuario)
     return resultado
 
 
