@@ -1,7 +1,7 @@
 const LOCATION = document.location;
 const subpath = LOCATION.pathname.split('/')[LOCATION.pathname.split('/').length -1];
 
-const URL_DOLOGIN = 'doLogin'
+const URL_GET_LIST_PRODUCT = 'get_lista_productos'
 
 
 const makeGet = async(url) => {
@@ -20,7 +20,7 @@ const makePost = async(url, datos) => {
 
     const respone = await fetch(`${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/${url}`, {
         method: 'POST',
-        headers: {'X-CSRFToken': csrftoken},
+        // headers: {'X-CSRFToken': csrftoken},
         mode: 'same-origin',
         body: data
     })
@@ -33,6 +33,9 @@ const makePost = async(url, datos) => {
     switch (subpath) {
         case 'productos':
             console.log("PRODUCTOS")
+            makePost(URL_GET_LIST_PRODUCT, {})
+                .then(data => console.log(data))
+                .catch(err => console.error)
             break;
         case 'clientes':
             break;

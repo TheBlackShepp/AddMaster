@@ -54,12 +54,13 @@ def easy_function(cookie_jar, lambda_func, param=None) -> any:
 
 # endregion
 # region Paginas
+
+# @app.route('/', methods=["GET"])
+# def index_i():
+#     return redirect("/index")
+
+
 @app.route('/', methods=["GET"])
-def index_i():
-    return redirect("/index")
-
-
-@app.route('/index', methods=["GET"])
 def index():
     resultado = None
     cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
@@ -82,10 +83,12 @@ def dashboardSubPath(subpath):
     cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
     # Si no tiene cookie
     if cookiesesion is None:
-        resultado = indexhtml("", False)
+        # resultado = indexhtml("", False)
+        return redirect("/")
     # Si tiene cookie pero no es valida
     elif controlador_cookies.contiene_cookie(cookiesesion) is False:
-        resultado = indexhtml("", True)
+        # resultado = indexhtml("", True)
+        return redirect("/")
     # Si tiene cookie y es valida
     else:
         id_usuario = controlador_cookies.get_id(cookiesesion)
@@ -154,6 +157,7 @@ def get_datos_producto():
 
 @app.route("/get_lista_productos", methods=["POST"])
 def get_lista_productos():
+    print('ENTRA POR AQUI')
     return easy_function(request.cookies, core_reservas.get_datos_producto)
 
 
