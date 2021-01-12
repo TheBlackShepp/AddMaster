@@ -316,6 +316,7 @@ class DatabaseController(DebugClass):
 
     def comprobar_user_credentials(self, formulario: dict) -> int:
         result: int = -1
+        formulario.update({"password": sha3_512(formulario['password'].encode()).hexdigest()})
         for i in range(self.__user_list.__len__()):
             if self.__user_list[i].same_credentials(formulario):
                 result = self.__user_list[i].id
