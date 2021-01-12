@@ -1,8 +1,6 @@
 from Back.DatabaseController import DatabaseController
 from Back.Enums import TipoCore, TipoUsuario
 from Herramientas.SimpleTools import ControlVariables
-from datetime import date
-
 
 database_controller: DatabaseController = DatabaseController()
 
@@ -607,7 +605,7 @@ clienteTest = {
     "apellido2": "Apellido 2",
     "telefono": "666666666",
     "edad": 99,
-    "fecha_nacimiento": date.today().__str__(),
+    "fecha_nacimiento": "date.today().__str__()",
     "domicilio": "None",
     "sexo": "X"
 }
@@ -620,7 +618,7 @@ usuarioTest = {
     "apellido2": "Apellido 2",
     "telefono": "666666666",
     "edad": 99,
-    "fecha_nacimiento": date.today().__str__(),
+    "fecha_nacimiento": "date.today().__str__()",
     "domicilio": "None",
     "sexo": "X",
     
