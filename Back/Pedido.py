@@ -238,7 +238,7 @@ class PedidoDetalle(Pedido):
         self._fecha_entregado = formulario["fecha_entregado"]
 
     def __dict__(self) -> dict:
-        dict_json: dict = super(Pedido, self).__dict__()
+        dict_json: dict = super(PedidoDetalle, self).__dict__()
         dict_json.update({
             "fecha_compra": self._fecha_compra,
             "fecha_entregado": self._fecha_entregado
