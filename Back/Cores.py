@@ -371,12 +371,12 @@ class CoreReservas(CoreBase):
 
 class CoreBodega(CoreBase):
     # region Comprobaciones
-    def comprobar_datos_usuario(self, id_usuario: int, formulario: dict) -> bool:
+    def comprobar_datos_usuario(self, formulario: dict) -> bool:
         """
         Compruba si los datos del formulario recibido posee o no los dotos necesarios
         """
         li: list = []
-        if id_usuario == 0:
+        if formulario["creator"] == 0:
             li = ["id", "email", "nombre", "apellido", "apellido2", "telefono", "edad", "fecha_nacimiento", "domicilio",
                   "sexo", "acceso"]
         else:
@@ -434,6 +434,7 @@ class CoreBodega(CoreBase):
             post_result True: Se han creado o modificado los datos de un producto
             post_result False: No se han creado o modificado los datos de un producto
         """
+        formulario.update({"creator": id_usuario})
         return \
             self.general_modify(
                 self.comprobar_datos_usuario, database_controller.modificar_datos_user, id_usuario, formulario)
