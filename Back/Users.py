@@ -200,7 +200,7 @@ class Usuario(Persona):
     # endregion
     def same_credentials(self, formulario: dict) -> bool:
         result: bool = False
-        if self._password == formulario['email']:
+        if self._email == formulario['email']:
             if self._password == formulario['password']:
                 result = True
         return result
