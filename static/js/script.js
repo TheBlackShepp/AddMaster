@@ -788,3 +788,15 @@ function deletePersonal(){
         })
         .catch(err => console.error)
 }
+
+// function imprimir pdf ->  
+function imprimirPDF(){
+
+    makePost('imprimir', {
+        "id": 1
+    })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(err => console.error)
+}

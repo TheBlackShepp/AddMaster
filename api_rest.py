@@ -267,7 +267,7 @@ def get_lista_materias_primas():
 # endregion
 # endregion
 
-@app.route("/imprimir")
+@app.route("/imprimir", methods=["POST"])
 def imprimir():
     return {"pdfname": easy_function(request.cookies, string_to_pdf, request.form.to_dict(flat=False))}
 
