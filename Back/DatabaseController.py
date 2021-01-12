@@ -147,7 +147,7 @@ class DatabaseController(DebugClass):
         result: int = -1
         for i in range(l.__len__()):
             if l[i].id == id_object:
-                result = l[i].id
+                result = i
                 break
         return result
 
@@ -351,10 +351,10 @@ class DatabaseController(DebugClass):
             self.save_pedidos()
         return result
 
-    def get_datos_pedido(self, formulario: dict) -> dict:
+    def get_datos_pedido(self, id_pedido_detalle: int) -> dict:
         result: dict = {}
-        print(formulario["id"])
-        pos: int = self.get_pos_id_pedido(formulario["id"])
+        pos: int = self.get_pos_id_pedido(id_pedido_detalle)
+        print(id_pedido_detalle, pos, self.__pedido_list)
         if self.__control_variables.variable_correcta_int(pos):
             result.update(self.__pedido_list[pos].__dict__())
         return result
