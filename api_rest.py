@@ -86,10 +86,10 @@ def dashboardSubPath(subpath):
     cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
     # Si no tiene cookie
     if cookiesesion is None:
-        resultado = indexhtml("", False)
+        return redirect("/")
     # Si tiene cookie pero no es valida
     elif controlador_cookies.contiene_cookie(cookiesesion) is False:
-        resultado = indexhtml("", True)
+        return redirect("/")
     # Si tiene cookie y es valida
     else:
         id_usuario = controlador_cookies.get_id(cookiesesion)
