@@ -58,9 +58,9 @@ def easy_function(cookie_jar, lambda_func, param=None) -> any:
 # endregion
 # region Paginas
 
-# @app.route('/', methods=["GET"])
-# def index_i():
-#     return redirect("/index")
+@app.route('/index', methods=["GET"])
+def index_i():
+    return redirect("/")
 
 
 @app.route('/', methods=["GET"])
@@ -86,12 +86,10 @@ def dashboardSubPath(subpath):
     cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
     # Si no tiene cookie
     if cookiesesion is None:
-        # resultado = indexhtml("", False)
-        return redirect("/")
+        resultado = indexhtml("", False)
     # Si tiene cookie pero no es valida
     elif controlador_cookies.contiene_cookie(cookiesesion) is False:
-        # resultado = indexhtml("", True)
-        return redirect("/")
+        resultado = indexhtml("", True)
     # Si tiene cookie y es valida
     else:
         id_usuario = controlador_cookies.get_id(cookiesesion)
