@@ -50,23 +50,26 @@ class CoreBase:
 
     def fix_int(self, formulario: dict, string: str):
         if formulario.get(string) is not None:
-            l: list = formulario.get(string)
-            if l.__len__() > 0:
-                formulario.update({string: int(l[0])})
+            if type(formulario.get(string)) is not int:
+                l: list = formulario.get(string)
+                if l.__len__() > 0:
+                    formulario.update({string: int(l[0])})
         return formulario
 
     def fix_str(self, formulario: dict, string: str):
         if formulario.get(string) is not None:
-            l: list = formulario.get(string)
-            if l.__len__() > 0:
-                formulario.update({string: l[0]})
+            if type(formulario.get(string)) is not str:
+                l: list = formulario.get(string)
+                if l.__len__() > 0:
+                    formulario.update({string: l[0]})
         return formulario
 
     def fix_bool(self, formulario: dict, string: str):
         if formulario.get(string) is not None:
-            l: list = formulario.get(string)
-            if l.__len__() > 0:
-                formulario.update({string: bool(l[0])})
+            if type(formulario.get(string)) is not bool:
+                l: list = formulario.get(string)
+                if l.__len__() > 0:
+                    formulario.update({string: bool(l[0])})
         return formulario
 
     def restore_form(self, formulario: dict) -> dict:
