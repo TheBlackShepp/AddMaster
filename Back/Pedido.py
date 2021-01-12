@@ -205,9 +205,9 @@ class PedidoDetalle(Pedido):
 
     # endregion
     # region Operadores
-    def __init__(self, cliente: Cliente, producto: Producto, enviar_a_domicilio: bool = False,
+    def __init__(self, id_cliente: int = -1, id_producto: int = -1, enviar_a_domicilio: bool = False,
                  fecha_entrega: str = "", id: int = -1, fecha_compra: str = "", fecha_entregado: str = ""):
-        super().__init__(cliente, producto, enviar_a_domicilio, fecha_entrega, id)
+        super().__init__(id_cliente, id_producto, enviar_a_domicilio, fecha_entrega, id)
         self._fecha_compra = fecha_compra
         self._fecha_entregado = fecha_entregado
 

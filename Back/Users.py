@@ -248,8 +248,8 @@ class Cliente(Persona):
     def pedidos_len(self) -> int:
         return self._pedidos.__len__()
 
-    def get_item(self, pos: int):
-        result = None
+    def get_item(self, pos: int) -> int:
+        result = -1
         if pos < self._pedidos.__len__():
             result = self._pedidos[pos]
         return result
@@ -264,8 +264,8 @@ class Cliente(Persona):
     def delete_item(self, pos: int) -> bool:
         return self.remove_item(pos)
 
-    def add_item(self, item):
-        self._pedidos.append(item)
+    def add_item(self, id_item: int):
+        self._pedidos.append(id_item)
 
     # endregion
     def formulario(self, formulario: dict):
