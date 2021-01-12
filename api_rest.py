@@ -260,7 +260,7 @@ def get_datos_materia_prima():
 
 
 @app.route("/get_lista_materia_prima", methods=["POST"])
-def get_datos_usuario():
+def get_lista_materia_prima():
     return easy_function(request.cookies, core_bodega.get_lista_materia_prima, request.form.to_dict(flat=False))
 
 
