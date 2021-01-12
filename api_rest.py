@@ -183,6 +183,38 @@ def get_datos_cliente():
     return easy_function(request.cookies, core_reservas.get_datos_cliente, request.form.to_dict(flat=False))
 
 
+@app.route("/get_lista_clientes", methods=["POST"])
+def get_lista_clientes():
+    return easy_function(request.cookies, core_reservas.get_lista_clientes)
+
+
+# endregion
+# region Pedido
+@app.route("/igresar_datos_pedido", methods=["POST"])
+def igresar_datos_pedido():
+    return easy_function(request.cookies, core_reservas.igresar_datos_pedido, request.form.to_dict(flat=False))
+
+
+@app.route("/eliminar_pedido", methods=["POST"])
+def eliminar_pedido():
+    return easy_function(request.cookies, core_reservas.eliminar_pedido, request.form.to_dict(flat=False))
+
+
+@app.route("/modificar_datos_pedido", methods=["POST"])
+def modificar_datos_pedido():
+    return easy_function(request.cookies, core_reservas.modificar_datos_pedido, request.form.to_dict(flat=False))
+
+
+@app.route("/get_datos_pedido", methods=["POST"])
+def get_datos_pedido():
+    return easy_function(request.cookies, core_reservas.get_datos_pedido, request.form.to_dict(flat=False))
+
+
+@app.route("/get_lista_pedidos", methods=["POST"])
+def get_lista_pedidos():
+    return easy_function(request.cookies, get_lista_pedidos.get_lista_clientes)
+
+
 # endregion
 # region Usuarios
 @app.route("/ingresar_usuario", methods=["POST"])
@@ -205,12 +237,39 @@ def get_datos_usuario():
     return easy_function(request.cookies, core_bodega.get_datos_usuario, request.form.to_dict(flat=False))
 
 
+@app.route("/get_lista_usuarios", methods=["POST"])
+def get_lista_pedidos():
+    return easy_function(request.cookies, get_lista_pedidos.get_lista_usuarios)
+
+
 # endregion
 # region Materia Prima
+@app.route("/igresar_datos_materia_prima", methods=["POST"])
+def igresar_datos_materia_prima():
+    return easy_function(request.cookies, core_bodega.igresar_datos_materia_prima, request.form.to_dict(flat=False))
+
+
+@app.route("/eliminar_meteria_prima", methods=["POST"])
+def eliminar_meteria_prima():
+    return easy_function(request.cookies, core_bodega.eliminar_meteria_prima, request.form.to_dict(flat=False))
+
+
+@app.route("/get_datos_materia_prima", methods=["POST"])
+def get_datos_materia_prima():
+    return easy_function(request.cookies, core_bodega.get_datos_materia_prima, request.form.to_dict(flat=False))
+
+
+@app.route("/get_lista_materia_prima", methods=["POST"])
+def get_datos_usuario():
+    return easy_function(request.cookies, core_bodega.get_lista_materia_prima, request.form.to_dict(flat=False))
+
+
+@app.route("/get_lista_materias_primas", methods=["POST"])
+def get_lista_materias_primas():
+    return easy_function(request.cookies, get_lista_pedidos.get_lista_materias_primas)
+
 
 # endregion
-# region Pedido
-
 # endregion
 if __name__ == '__main__':
     app.run(
