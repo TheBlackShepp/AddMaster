@@ -238,8 +238,8 @@ def get_datos_usuario():
 
 
 @app.route("/get_lista_usuarios", methods=["POST"])
-def get_lista_pedidos():
-    return easy_function(request.cookies, get_lista_pedidos.get_lista_usuarios)
+def get_lista_usuarios():
+    return easy_function(request.cookies, core_bodega.get_lista_usuarios)
 
 
 # endregion

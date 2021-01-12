@@ -55,7 +55,7 @@ class CoreBase:
                 formulario.update({"id": int(l[0])})
         return formulario
 
-    def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict):
+    def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict) -> dict:
         result: dict = {}
         if comprobador(formulario) and self._control_variables.variable_correcta_int(id_usuario):
             result.update(self.get_dict_params(True))
