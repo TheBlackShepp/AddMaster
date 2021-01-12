@@ -1,0 +1,1 @@
+"{\"pedido\": [{\"id\": 1, \"id_cliente\": 0, \"enviar_a_domicilio\": true, \"id_producto\": 0, \"fecha_entrega\": \"2021-01-12T21:51:42.060Z\", \"fecha_compra\": \"2021-01-12T21:51:42.060Z\", \"fecha_entregado\": \"2021-01-12T21:51:42.060Z\"}], \"id\": 4}"
