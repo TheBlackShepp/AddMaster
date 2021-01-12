@@ -405,6 +405,7 @@ class CoreBodega(CoreBase):
             post_result True: Se han creado o modificado los datos de un producto
             post_result False: No se han creado o modificado los datos de un producto
         """
+        formulario.update({"creator": id_usuario})
         return \
             self.general_add(
                 self.comprobar_datos_usuario, database_controller.add_new_user, id_usuario, formulario)
