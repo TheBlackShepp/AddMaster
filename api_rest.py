@@ -3,6 +3,7 @@ from ControladorCookies import ControladorCookies
 from Back.Cores import CoreSeesion, CoreReservas, CoreBodega
 from Herramientas.SimpleTools import ControlVariables
 from Back.Enums import TipoUsuario
+from fpdf import FPDF
 
 # Instancias
 app = Flask(__name__)
@@ -53,6 +54,19 @@ def easy_function(cookie_jar, lambda_func, param=None) -> any:
         else:
             resultado = lambda_func(id_usuario)
     return resultado
+
+
+def string_to_pdf(id_usuario: int, formulario: dict) -> str:
+    result: str = ""
+    pedido = core_reservas.get_datos_pedido(id_usuario, formulario)
+    if pedido['params'] is True and pedido["permission"] is True:
+        result = f'Pedido numero {pedido["id"]}.pdf'
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font('Courier', 'B', 16)
+        pdf.cell(40, 10, pedido.__str__())
+        pdf.output(result, 'F')
+    return result
 
 
 # endregion
@@ -129,21 +143,6 @@ def login():
 # region Producto
 @app.route("/igresar_datos_producto", methods=["POST"])
 def igresar_datos_producto():
-    """@app.route("/igresar_datos_producto", methods=["POST"])
-    def igresar_datos_producto():
-        resultado = None
-        cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
-        # Si no tiene cookie
-        if cookiesesion is None:
-            abort(404, "Cookie not found")
-        # Si tiene cookie pero no es valida
-        elif controlador_cookies.contiene_cookie(cookiesesion) is False:
-            abort(404, "Cookie not valid")
-        # Si tiene cookie y es valida
-        else:
-            id_usuario = controlador_cookies.get_id(cookiesesion)
-            resultado = core_reservas.igresar_datos_producto(id_usuario, request.form)
-        return resultado"""
     return easy_function(request.cookies, core_reservas.igresar_datos_producto, request.form.to_dict(flat=False))
 
 
@@ -267,6 +266,12 @@ def get_lista_materias_primas():
 
 # endregion
 # endregion
+
+@app.route("/imprimir")
+def imprimir():
+    return {"pdfname": easy_function(request.cookies, string_to_pdf, request.form.to_dict(flat=False))}
+
+
 if __name__ == '__main__':
     app.run(
         port=8080,
