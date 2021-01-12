@@ -212,7 +212,7 @@ def get_datos_pedido():
 
 @app.route("/get_lista_pedidos", methods=["POST"])
 def get_lista_pedidos():
-    return easy_function(request.cookies, get_lista_pedidos.get_lista_clientes)
+    return easy_function(request.cookies, core_reservas.get_lista_pedidos)
 
 
 # endregion
@@ -266,7 +266,7 @@ def get_datos_usuario():
 
 @app.route("/get_lista_materias_primas", methods=["POST"])
 def get_lista_materias_primas():
-    return easy_function(request.cookies, get_lista_pedidos.get_lista_materias_primas)
+    return easy_function(request.cookies, core_bodega.get_lista_materias_primas)
 
 
 # endregion
