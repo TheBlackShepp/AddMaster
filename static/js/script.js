@@ -145,7 +145,7 @@ const makeRowClient = (client) => {
             <td class="px-4 py-3">
             <div class="flex items-center space-x-4 text-sm">
                 <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
                 onclick="viewDetailsClient('client')">
                 <svg
@@ -160,7 +160,7 @@ const makeRowClient = (client) => {
                 </svg>
                 </button>
                 <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Delete"
                 onclick="deleteClient('id_cliente')">
                 <svg
@@ -239,7 +239,7 @@ const makeRowOrder = (order) => {
             <td class="px-4 py-3">
             <div class="flex items-center space-x-4 text-sm">
                 <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
                 onclick="viewDetailsOrder('order')"
                 >
@@ -255,7 +255,7 @@ const makeRowOrder = (order) => {
                 </svg>
                 </button>
                 <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Delete"
                 onclick="deleteOrder('order')"
                 >
@@ -342,6 +342,8 @@ function deleteOrder(id){
 function showFullModal() {
     const modal = document.getElementById('modal-full')
     modal.style.transform= 'translateY(6.5%)'
+
+    createModal()
 }
 
 // TODO close modal
@@ -361,4 +363,26 @@ function showModalDelete(){
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si, eliminarlo'
       })
-} 
+}
+
+// TODO create modal
+const inputGeneral = (key, value) => {
+    return `
+        <div class="flex flex-col m-5">
+            <label class="font-medium">${key}</label>
+            <input class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" value="${value}" />
+        </div>
+    `
+}
+function createModal(object){
+
+    let o = {'name': 'Marcos Martin', 'description': 'adadadad'}
+    const container = document.getElementById('container-modal')
+
+    let texto = ''
+    for (let key in o) {
+        texto+= inputGeneral(key, o[key])
+    }
+    
+    container.innerHTML = texto
+}
