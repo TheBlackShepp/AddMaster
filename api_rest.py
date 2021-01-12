@@ -102,9 +102,10 @@ def login():
     resultado = None
     # Si es la peticion de POST de inicio de sesion
     if request.method == "POST":
+        formulario = request.form.to_dict(flat=False)
         # Si los parametros recibidos son correctos
-        if sesion_control.comprobar_inicio_sesion(request.form):
-            id_usuario: int = sesion_control.iniciar_sesion(request.form)
+        if sesion_control.comprobar_inicio_sesion(formulario):
+            id_usuario: int = sesion_control.iniciar_sesion(formulario)
             # Si las credenciales son correctas
             if control_variables.variable_correcta_int(id_usuario):
                 # Generamos un cookie
