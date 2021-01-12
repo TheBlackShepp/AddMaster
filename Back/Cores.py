@@ -48,15 +48,20 @@ class CoreBase:
     def get_tipo_usuario(self, id_usuario: int) -> TipoUsuario:
         return database_controller.get_user_permission(id_usuario)
 
-    def restore_form_id(self, formulario: dict) -> dict:
+    def restore_form(self, formulario: dict) -> dict:
         if formulario.get('id') is not None:
             l: list = formulario.get('id')
             if l.__len__() > 0:
                 formulario.update({"id": int(l[0])})
+        if formulario.get("enviar_a_domicilio") is not None:
+            l: list = formulario.get('enviar_a_domicilio')
+            if l.__len__() > 0:
+                formulario.update({"enviar_a_domicilio": bool(l[0])})
         return formulario
 
     def general_add(self, comprobador, funcion_de_generacion, id_usuario: int, formulario: dict) -> dict:
         result: dict = {}
+        formulario = self.restore_form(formulario)
         if comprobador(formulario) and self._control_variables.variable_correcta_int(id_usuario):
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
@@ -71,7 +76,7 @@ class CoreBase:
 
     def general_delete(self, funcion_de_eliminacion, id_usuario: int, formulario: dict) -> dict:
         result: dict = {}
-        formulario = self.restore_form_id(formulario)
+        formulario = self.restore_form(formulario)
         if formulario.get("id") is not None and \
                 self._control_variables.variable_correcta_list_int([id_usuario, formulario["id"]]):
             result.update(self.get_dict_params(True))
@@ -86,7 +91,7 @@ class CoreBase:
 
     def general_modify(self, comprobador, funcion_de_modificacion, id_usuario: int, formulario: dict):
         result: dict = {}
-        formulario = self.restore_form_id(formulario)
+        formulario = self.restore_form(formulario)
         if comprobador(formulario) and self._control_variables.variable_correcta_int(id_usuario):
             result.update(self.get_dict_params(True))
             if self.user_have_permission(id_usuario):
@@ -100,7 +105,7 @@ class CoreBase:
 
     def general_get_datos(self, getter, id_usuario: int, formulario: dict) -> dict:
         result: dict = {}
-        formulario = self.restore_form_id(formulario)
+        formulario = self.restore_form(formulario)
         if formulario.get("id") is not None and \
                 self._control_variables.variable_correcta_list_int([id_usuario, formulario["id"]]):
             result.update(self.get_dict_params(True))
@@ -492,20 +497,9 @@ class CoreBodega(CoreBase):
         """
         return self.general_get_datos(database_controller.get_datos_materia_prima, id_usuario, formulario)
 
-    def get_lista_materia_prima(self, id_usuario: int) -> dict:
-        """
-        Obtiene los datos de todos las materias primas en una lista de diccionarios
-        Segun los datos recibidos:
-            permission True: Se puede acceder a esta funcionalidad con el id_persona
-            permission False: No se puede acceder a esta funcionalidad con el id_persona
-            params True: Los datos recibidos estan en formato correcto
-            params False: Los datos recibidos no estan en formato correcto
-        """
-        return self.general_get_lists(database_controller.get_lista_materia_prima, id_usuario)
-
     def get_lista_materias_primas(self, id_usuario: int) -> dict:
         """
-        Obtiene los datos de todos los productos en una lista de diccionarios
+        Obtiene los datos de todos las materias primas en una lista de diccionarios
         Segun los datos recibidos:
             permission True: Se puede acceder a esta funcionalidad con el id_persona
             permission False: No se puede acceder a esta funcionalidad con el id_persona
