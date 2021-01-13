@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, jsonify, redirect, make_response, abort
+from flask import Flask, render_template, request, jsonify, redirect, make_response, abort, send_from_directory
 from ControladorCookies import ControladorCookies
 from Back.Cores import CoreSeesion, CoreReservas, CoreBodega
 from Herramientas.SimpleTools import ControlVariables
 from Back.Enums import TipoUsuario, TipoMateria
 from fpdf import FPDF
+from os import path
 
 # Instancias
 app = Flask(__name__)
@@ -279,6 +280,14 @@ def get_materia_prima_name(id):
     else:
         v: TipoMateria = TipoMateria(id)
         return v.__str__()
+
+
+@app.route('/getFile/<string:filename>', methods=['GET'])
+def download(filename: str):
+    if path.exists(filename):
+        return send_from_directory(directory=".", filename=filename)
+    else:
+        abort(404, "Fila not faund")
 
 
 if __name__ == '__main__':
