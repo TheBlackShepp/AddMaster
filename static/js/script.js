@@ -69,47 +69,6 @@ const makePost = async(url, datos) => {
 
 (function() {
 
-    function get_productos(){
-        makePost(URL_GET_LIST_PRODUCT, {})
-        .then(data => {
-            console.log(data);
-            printListProducts(data.products)
-        })
-        .catch(err => console.error)
-    }
-    function get_clientes(){
-        makePost(URL_GET_LIST_CLIENT, {})
-        .then(data => {
-            console.log(data);
-            printListClients(data.clients)
-        })
-        .catch(err => console.error)
-    }
-    function get_pedidos(){
-        makePost(URL_GET_LIST_ORDER, {})
-            .then(data => {
-                console.log(data);
-                printListOrders(data.pedido)
-            })
-            .catch(err => console.error)
-    }
-    function get_materias(){
-        makePost(URL_GET_LIST_MATERIAL, {})
-        .then(data => {
-            console.log(data);
-            printListMaterial(data.materias)
-        })
-        .catch(err => console.error)
-    }
-    function get_personal(){
-        makePost(URL_GET_LIST_PERSONAL, {})
-            .then(data => {
-                console.log(data);
-                printListPersonal(data.users)
-            })
-            .catch(err => console.error)
-    }
-
     switch (subpath) {
         case 'productos':
             console.log("PRODUCTOS")
@@ -144,6 +103,47 @@ const makePost = async(url, datos) => {
     }
 
 })();
+
+function get_productos(){
+    makePost(URL_GET_LIST_PRODUCT, {})
+    .then(data => {
+        console.log(data);
+        printListProducts(data.products)
+    })
+    .catch(err => console.error)
+}
+function get_clientes(){
+    makePost(URL_GET_LIST_CLIENT, {})
+    .then(data => {
+        console.log(data);
+        printListClients(data.clients)
+    })
+    .catch(err => console.error)
+}
+function get_pedidos(){
+    makePost(URL_GET_LIST_ORDER, {})
+        .then(data => {
+            console.log(data);
+            printListOrders(data.pedido)
+        })
+        .catch(err => console.error)
+}
+function get_materias(){
+    makePost(URL_GET_LIST_MATERIAL, {})
+    .then(data => {
+        console.log(data);
+        printListMaterial(data.materias)
+    })
+    .catch(err => console.error)
+}
+function get_personal(){
+    makePost(URL_GET_LIST_PERSONAL, {})
+        .then(data => {
+            console.log(data);
+            printListPersonal(data.users)
+        })
+        .catch(err => console.error)
+}
 
 // pintar productos
 const makeCardProduct = (product) => {
@@ -559,22 +559,6 @@ function viewDetailsPersonal(id){
 }
 
 
-// eliminar cliente
-function deleteClient(id){
-
-    showModalDelete()
-        .then((result) => {
-            if (result.isConfirmed) {
-            Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-            )
-            }
-        })
-}
-
-
 // eliminar personal
 function deletePersonal(id){
 
@@ -607,6 +591,11 @@ function showFullModal(typeOpen, data, modi) {
                     tileModal.innerHTML= `Modificar ${data.nombre ? data.nombre : data.id}`
                 }else
                     tileModal.innerHTML= data.nombre ? data.nombre : data.id;
+
+                    if(list=== 'order'){
+                        document.getElementById('imprimir-pdf').classList.remove('hidden');
+                        document.getElementById('imprimir-pdf').setAttribute('onclick', `imprimirPDF(${data.id})`)                       
+                    }
                 break;
             case 'create':
                 btnSave.classList.remove('hidden')
@@ -628,8 +617,8 @@ function showFullModal(typeOpen, data, modi) {
                         tileModal.innerHTML= 'Crear Materia Prima';
                         break;
                     case 'personal':
-                        btnSave.setAttribute('onclick', 'createClient()')
-                        tileModal.innerHTML= 'Crear Cliente';
+                        btnSave.setAttribute('onclick', 'createPersonal()')
+                        tileModal.innerHTML= 'Crear Personal';
                         break;
                 }
                 break;
@@ -671,6 +660,7 @@ function closeFullModal(use){
     container.classList.add('hidden')
 
     document.getElementById('save-modal').classList.add('hidden')
+    document.getElementById('imprimir-pdf').classList.add('hidden');
 
     document.querySelectorAll('.marca').forEach(element => {
         element.disabled = false
@@ -756,6 +746,7 @@ function createProduct(){
     })
         .then(data => {
             console.log(data);
+            get_productos()
             closeFullModal('product')
         })
         .catch(err => console.error)
@@ -786,6 +777,7 @@ function modifyProduct(id){
     })
         .then(data => {
             console.log(data);
+            get_productos()
             closeFullModal('product')
         })
         .catch(err => console.error)
@@ -832,6 +824,7 @@ function createClient(){
     })
         .then(data => {
             console.log(data);
+            get_clientes()
             closeFullModal('client')
         })
         .catch(err => console.error)
@@ -852,7 +845,7 @@ function modifyClient(id){
     console.log(listValue)
 
     makePost(URL_MODIFY_CLIENT, {
-        "id": 0,
+        id,
         "email": listValue.email,
         "nombre": listValue.nombre,
         "apellido": listValue.apellido,
@@ -865,6 +858,7 @@ function modifyClient(id){
     })
         .then(data => {
             console.log(data);
+            get_clientes()
             closeFullModal('client')
         })
         .catch(err => console.error)
@@ -934,17 +928,22 @@ function createOrder(){
 
     console.log(listValue)
 
-    makePost(URL_CREATE_ORDER, {
+    let c = {
         "id": 0, 
         "id_cliente": listValue.id_cliente, 
-        "enviar_a_domicilio": listValue.enviar_a_domicilio === 'true' ? true : false, 
+        "enviar_a_domicilio": listValue.enviar_a_domicilio === "true" ? true : false, 
         "id_producto": listValue.id_producto, 
         "fecha_entrega": listValue.fecha_entrega, 
         "fecha_compra": listValue.fecha_compra,
         "fecha_entregado": listValue.fecha_entregado
-    })
+    }
+
+    console.log('HOLA', c)
+
+    makePost(URL_CREATE_ORDER, c)
         .then(data => {
             console.log(data);
+            get_pedidos()
             closeFullModal('order')
         })
         .catch(err => console.error)
@@ -966,7 +965,7 @@ function modifyOrder(id){
     makePost(URL_MODIFY_ORDER, {
         id,
         "id_cliente": listValue.id_cliente, 
-        "enviar_a_domicilio": listValue.enviar_a_domicilio === 'true' ? true : false, 
+        "enviar_a_domicilio": listValue.enviar_a_domicilio === "true" ? true : false, 
         "id_producto": listValue.id_producto, 
         "fecha_entrega": listValue.fecha_entrega, 
         "fecha_compra": listValue.fecha_compra,
@@ -974,8 +973,8 @@ function modifyOrder(id){
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            get_pedidos()
+            closeFullModal('order')
         })
         .catch(err => console.error)
 }
@@ -1000,7 +999,7 @@ function deleteOrder(id){
     .then((result) => {
         if (result.isConfirmed) {
             makePost(URL_DELETE_ORDER, {
-                "id": 0
+                id
             })
                 .then(data => {
                     console.log(data);
@@ -1030,8 +1029,6 @@ function deleteOrder(id){
 }
 
 
-
-
 // function create material ->  FUNCIONA
 function createMaterial(){
 
@@ -1053,6 +1050,7 @@ function createMaterial(){
     })
         .then(data => {
             console.log(data);
+            get_material()
             closeFullModal('material')
         })
         .catch(err => console.error)
@@ -1145,9 +1143,12 @@ function createPersonal(){
                 "password": listValue.password
             }
             
+            console.log(jsonSend)
+
            makePost(URL_CREATE_PERSONAL, jsonSend)
             .then(data => {
                 console.log(data);
+                get_personal()
                 closeFullModal('personal')
             })
             .catch(err => console.error)
@@ -1186,7 +1187,8 @@ function modifyPersonal(id){
     })
         .then(data => {
             console.log(data);
-            
+            get_personal()
+            closeFullModal('personal');
         })
         .catch(err => console.error)
 }
@@ -1233,13 +1235,14 @@ function eliminarPersonal(id){
 }
 
 // function imprimir pdf ->  
-function imprimirPDF(){
+function imprimirPDF(id){
 
     makePost('imprimir', {
-        "id": 1
+        id
     })
         .then(data => {
             console.log(data);
+            window.location= `${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/getFile/${data.pdfname}`
         })
         .catch(err => console.error)
 }
