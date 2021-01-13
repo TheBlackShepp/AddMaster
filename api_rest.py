@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, make_respo
 from ControladorCookies import ControladorCookies
 from Back.Cores import CoreSeesion, CoreReservas, CoreBodega
 from Herramientas.SimpleTools import ControlVariables
-from Back.Enums import TipoUsuario
+from Back.Enums import TipoUsuario, TipoMateria
 from fpdf import FPDF
 
 # Instancias
@@ -71,7 +71,6 @@ def string_to_pdf(id_usuario: int, formulario: dict) -> str:
 
 # endregion
 # region Paginas
-
 @app.route('/index', methods=["GET"])
 def index_i():
     return redirect("/")
@@ -266,10 +265,20 @@ def get_lista_materias_primas():
 
 # endregion
 # endregion
-
 @app.route("/imprimir", methods=["POST"])
 def imprimir():
     return {"pdfname": easy_function(request.cookies, string_to_pdf, request.form.to_dict(flat=False))}
+
+
+@app.route("/get_materia_prima_name/<int: id>")
+def get_materia_prima_name(id: int):
+    if id < 0:
+        return "No existe"
+    elif id > TipoMateria.Alvarinio.value:
+        return "No existe"
+    else:
+        v: TipoMateria = TipoMateria(id)
+        return v.__str__()
 
 
 if __name__ == '__main__':
