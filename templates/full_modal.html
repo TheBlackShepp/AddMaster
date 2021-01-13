@@ -19,47 +19,165 @@
 
     <div id="container-modal" class="w-full md:w-2/4 h-full md:h-auto flex flex-col">
        
+        <div id="modal-product" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre</label>
+                <input id="modal-product-nombre" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Precio</label>
+                <input id="modal-product-precio" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Cantidad</label>
+                <input id="modal-product-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Etiquetas</label>
+                <textarea id="modal-product-etiquetas" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" ></textarea>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha de inicio venta</label>
+                <input id="modal-product-fecha_inicio_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha fin venta</label>
+                <input id="modal-product-fecha_fin_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Descripcion</label>
+                <textarea  id="modal-product-descripcion" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow"></textarea>
+            </div>
+        </div>
+
         <div id="modal-personal" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
             <div class="flex flex-col m-5">
                 <label class="font-medium">Nombre</label>
-                <input id="modal-personal-nombre" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-nombre" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Apellido</label>
-                <input id="modal-personal-apellido" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-apellido" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Edad</label>
-                <input id="modal-personal-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Email</label>
-                <input id="modal-personal-email" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-email" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Telefono</label>
-                <input id="modal-personal-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Sexo</label>
-                <select id="modal-personal-sexo" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select" disabled>
+                <select id="modal-personal-sexo" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
                     <option value="X">Hombre</option>
                     <option value="F">Mujer</option>
                 </select>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha de nacimiento</label>
-                <input id="modal-personal-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+                <input id="modal-personal-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Permisos</label>
-                <select id="modal-personal-acceso" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select" disabled>
+                <select id="modal-personal-acceso" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
                    <option value="1">Personal</option>
                    {% if permission == 0%}
                         <option value="2">Administrador</option>
                         <option value="0">Dolores</option>
                    {% endif %}
                   </select>
+            </div>
+        </div>
+
+        <div id="modal-client" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre</label>
+                <input id="modal-client-nombre" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Apellido</label>
+                <input id="modal-client-apellido" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Edad</label>
+                <input id="modal-client-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Email</label>
+                <input id="modal-client-email" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Telefono</label>
+                <input id="modal-client-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Sexo</label>
+                <select id="modal-client-sexo" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
+                    <option value="X">Hombre</option>
+                    <option value="F">Mujer</option>
+                </select>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha de nacimiento</label>
+                <input id="modal-client-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Domicilio</label>
+                <input id="modal-client-domicilio" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+        </div>
+
+        <div id="modal-order" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre cliente</label>
+                <input id="modal-order-id_cliente" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre Producto</label>
+                <input id="modal-order-id_producto" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha compra</label>
+                <input id="modal-order-fecha_compra" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha entrega</label>
+                <input id="modal-order-fecha_entrega" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha entregado</label>
+                <input id="modal-order-fecha_entregado" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Enviar a domicilio</label>
+                <select id="modal-order-enviar_a_domicilio" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="modal-material" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre cliente</label>
+                <input id="modal-material-tipo_materia" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Cantidad</label>
+                <input id="modal-material-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Cantidad Recibida</label>
+                <input id="modal-material-cantidad_recibida" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha llegada</label>
+                <input id="modal-material-fecha_llegada" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
             </div>
         </div>
 

@@ -1,11 +1,20 @@
 
 <main id="main-materias" class="h-full pb-16 overflow-y-auto hidden">
     <div class="container grid px-6 mx-auto">
-      <h2
-        class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
-      >
-        Materias Primas
-      </h2>
+      <div class="flex flex-col md:flex-row">
+        <h2 class="flex-none  my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"  >
+          Materias Primas
+        </h2>
+
+        <div class="flex-grow flex justify-center">
+          <input id="search-order" class="m-0 md:m-6 p-4 md:p-0 md:pl-6 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" placeholder="buscar"/>
+        </div>
+
+        <button class="flex-none m-6 p-2 text-{{color}} focus:outline-none anima hover:bg-{{color}} transition duration-300 ease-in-out hover:text-white font-medium rounded-md shadow-md" onclick="showFullModal('create-material', '')">
+          Crear Materia Prima
+        </button>
+
+      </div>
       
       <div class="w-full overflow-hidden rounded-lg shadow-xs">
         <div class="w-full overflow-x-auto">
@@ -14,19 +23,18 @@
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
-                <th class="px-4 py-3">Client</th>
-                <th class="px-4 py-3">Amount</th>
-                <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3">Date</th>
-                <th class="px-4 py-3">Actions</th>
+                <th class="px-4 py-3">Tipo de Materia</th>
+                <th class="px-4 py-3">Cantidad</th>
+                <th class="px-4 py-3">Fecha de entrega</th>
+                <th class="px-4 py-3">Acciones</th>
               </tr>
             </thead>
-            <tbody id="container-materials" class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" >
+            <tbody id="container-material" class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" >
              
             </tbody>
           </table>
         </div>
-        <div id="container-material" class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800" >
+        <div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800" >
          
         </div>
       </div>

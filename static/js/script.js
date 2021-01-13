@@ -69,50 +69,69 @@ const makePost = async(url, datos) => {
 
 (function() {
 
-    switch (subpath) {
-        case 'productos':
-            console.log("PRODUCTOS")
-            makePost(URL_GET_LIST_PRODUCT, {})
-                .then(data => {
-                    console.log(data);
-                    printListProducts(data.products)
-                })
-                .catch(err => console.error)
-            break;
-        case 'clientes':
-            makePost(URL_GET_LIST_CLIENT, {})
-                .then(data => {
-                    console.log(data);
-                    printListClients(data.clients)
-                })
-                .catch(err => console.error)
-            break;
-    
-        case 'pedidos':
-            makePost(URL_GET_LIST_ORDER, {})
-                .then(data => {
-                    console.log(data);
-                    printListOrders(data.pedido)
-                })
-                .catch(err => console.error)
-            break;
-
-        case 'materias':
-            makePost(URL_GET_LIST_MATERIAL, {})
+    function get_productos(){
+        makePost(URL_GET_LIST_PRODUCT, {})
+        .then(data => {
+            console.log(data);
+            printListProducts(data.products)
+        })
+        .catch(err => console.error)
+    }
+    function get_clientes(){
+        makePost(URL_GET_LIST_CLIENT, {})
+        .then(data => {
+            console.log(data);
+            printListClients(data.clients)
+        })
+        .catch(err => console.error)
+    }
+    function get_pedidos(){
+        makePost(URL_GET_LIST_ORDER, {})
             .then(data => {
                 console.log(data);
-                printListMaterial(data.materias)
+                printListOrders(data.pedido)
             })
             .catch(err => console.error)
-            break;
-
-        case 'personal':
-            makePost(URL_GET_LIST_PERSONAL, {})
+    }
+    function get_materias(){
+        makePost(URL_GET_LIST_MATERIAL, {})
+        .then(data => {
+            console.log(data);
+            printListMaterial(data.materias)
+        })
+        .catch(err => console.error)
+    }
+    function get_personal(){
+        makePost(URL_GET_LIST_PERSONAL, {})
             .then(data => {
                 console.log(data);
                 printListPersonal(data.users)
             })
             .catch(err => console.error)
+    }
+
+    switch (subpath) {
+        case 'productos':
+            console.log("PRODUCTOS")
+            get_productos()
+            break;
+
+        case 'clientes':
+            get_clientes()
+            break;
+
+        case 'pedidos':
+            get_productos()
+            get_clientes()
+            get_pedidos();
+            break;
+
+        case 'materias':
+            get_materias()
+            break;
+
+        case 'personal':
+            get_personal()
             break;
 
         default:
@@ -132,16 +151,34 @@ const makeCardProduct = (product) => {
     let listImg = ['vino_mujercanon.jpg', 'vino_valbuena.jpg']
 
     return `
-        <div class="max-w-md w-full lg:flex shadow cursor-pointer" onclick="viewDetailsProduct(1)">
-            <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" title="Woman holding a mug">
+        <div class="max-w-md w-full lg:flex shadow cursor-pointer">
+            <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" title="Woman holding a mug" onclick="getDataProduct(${product.id})">
             <img class="w-full h-full object-cover" src="/static/img/${listImg[Math.ceil(Math.random()*2) - 1 ]}" alt="vino">
             </div>
             <div class="bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-            <div class="mb-8">
+            <div class="mb-8 h-full" onclick="getDataProduct(${product.id})">
                 <div class="text-black font-bold text-xl mb-2">${product.nombre}</div>
                 <p class="text-grey-darker text-base">${product.descripcion}</p>
             </div>
-
+            <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 bg-${color} text-white rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Edit"
+                onclick="showFullModal('modify-product',${product.id})"
+                >
+                <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    ></path>
+                </svg>
+                    <div class="w-full">
+                        Modificar
+                    </div>
+                </button>
             </div>
         </div>
     `
@@ -156,14 +193,15 @@ function printListProducts(listProducts){
     })
 
     container.innerHTML = text;
+    keysProducts= listProducts;
 }
 
 // pintar clientes
 const makeRowClient = (client) => {
-
+    
     return `
         <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" onclick="getDataClient(${client.id})">
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
                 <div
@@ -185,10 +223,10 @@ const makeRowClient = (client) => {
                 </div>
             </div>
             </td>
-            <td class="px-4 py-3 text-sm">
+            <td class="px-4 py-3 text-sm" onclick="getDataClient(${client.id})">
             ${client.email}
             </td>
-            <td class="px-4 py-3 text-sm">
+            <td class="px-4 py-3 text-sm" onclick="getDataClient(${client.id})">
             ${client.telefono}
             </td>
             <td class="px-4 py-3">
@@ -196,7 +234,7 @@ const makeRowClient = (client) => {
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
-                onclick="viewDetailsClient('client')">
+                onclick="showFullModal('modify-client',${client.id})">
                 <svg
                     class="w-5 h-5"
                     aria-hidden="true"
@@ -211,7 +249,7 @@ const makeRowClient = (client) => {
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Delete"
-                onclick="deleteClient('id_cliente')">
+                onclick="deleteClient(${client.id})">
                 <svg
                     class="w-5 h-5"
                     aria-hidden="true"
@@ -240,6 +278,7 @@ function printListClients(listClients){
     })
 
     container.innerHTML = text;
+    keysClients= listClients;
 }
 
 // pintar pedidos
@@ -258,31 +297,21 @@ const makeRowOrder = (order) => {
 
     return `
         <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 text-sm" onclick="getDataOrder(${order.id})">
+                ${order.id}
+            </td>
+            <td class="px-4 py-3" onclick="getDataOrder(${order.id})">
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
-                <div
-                class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
-                >
-                <img
-                    class="object-cover w-full h-full rounded-full"
-                    src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-                    alt=""
-                    loading="lazy"
-                />
-                <div
-                    class="absolute inset-0 rounded-full shadow-inner"
-                    aria-hidden="true"
-                ></div>
-                </div>
-                <div>
+              
+                <!-- keysClients.filter(clien => clien.id === order.id_cliente)[0].nombre -->
                 <p class="font-semibold">${order.id_cliente}</p>
             </div>
             </td>
-            <td class="px-4 py-3 text-sm">
+            <td class="px-4 py-3 text-sm" onclick="getDataOrder(${order.id})">
             ${order.fecha_compra}
             </td>
-            <td class="px-4 py-3 text-xs">
+            <td class="px-4 py-3 text-xs" onclick="getDataOrder(${order.id})">
                 ${domicilio}
             </td>
             <td class="px-4 py-3">
@@ -290,7 +319,7 @@ const makeRowOrder = (order) => {
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
-                onclick="viewDetailsOrder('order')"
+                onclick="showFullModal('modify-order',${order.id})"
                 >
                 <svg
                     class="w-5 h-5"
@@ -306,7 +335,7 @@ const makeRowOrder = (order) => {
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Delete"
-                onclick="deleteOrder('order')"
+                onclick="deleteOrder(${order.id})"
                 >
                 <svg
                     class="w-5 h-5"
@@ -335,73 +364,32 @@ function printListOrders(listOrders){
     })
 
     container.innerHTML = text; 
+    keysOrders= listOrders;
 }
 
 // pintar materias prima
 const makeRowMaterial = (material) => {
 
-    let domicilio = ''
-    if(order.enviar_a_domicilio){
-        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100" >
-            si
-        </span>`
-    }else{
-        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:bg-green-700 dark:text-green-100" >
-        no
-    </span>`
-    }
-
     return `
         <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" onclick="getDataMaterial(${material.id})">
             <div class="flex items-center text-sm">
-                <!-- Avatar with inset shadow -->
-                <div
-                class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
-                >
-                <img
-                    class="object-cover w-full h-full rounded-full"
-                    src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-                    alt=""
-                    loading="lazy"
-                />
-                <div
-                    class="absolute inset-0 rounded-full shadow-inner"
-                    aria-hidden="true"
-                ></div>
-                </div>
-                <div>
-                <p class="font-semibold">${order.id_cliente}</p>
+                
+                <p class="font-semibold">${material.tipo_materia}</p>
             </div>
             </td>
-            <td class="px-4 py-3 text-sm">
-            ${order.fecha_compra}
+            <td class="px-4 py-3 text-sm" onclick="getDataMaterial(${material.id})">
+                ${material.cantidad}
             </td>
-            <td class="px-4 py-3 text-xs">
-                ${domicilio}
+            <td class="px-4 py-3 text-xs" onclick="getDataMaterial(${material.id})">
+                ${material.fecha_llegada}
             </td>
             <td class="px-4 py-3">
             <div class="flex items-center space-x-4 text-sm">
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-                aria-label="Edit"
-                onclick="viewDetailsOrder('order')"
-                >
-                <svg
-                    class="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                >
-                    <path
-                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                    ></path>
-                </svg>
-                </button>
-                <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Delete"
-                onclick="deleteOrder('order')"
+                onclick="deleteMaterial(${material.id})"
                 >
                 <svg
                     class="w-5 h-5"
@@ -586,35 +574,6 @@ function deleteClient(id){
         })
 }
 
-// eliminar pedido
-function deleteOrder(id){
-
-    showModalDelete()
-        .then((result) => {
-            if (result.isConfirmed) {
-            Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-            )
-            }
-        })
-}
-
-// eliminar material
-function deleteMaterial(id){
-
-    showModalDelete()
-        .then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
-        })
-}
 
 // eliminar personal
 function deletePersonal(id){
@@ -631,6 +590,7 @@ function deletePersonal(id){
 
 // TODO show modal
 function showFullModal(typeOpen, data, modi) {
+    const btnSave = document.getElementById('save-modal')
     const modal = document.getElementById('modal-full')
     modal.style.transform= 'translateY(6.5%)'
 
@@ -644,17 +604,50 @@ function showFullModal(typeOpen, data, modi) {
             case 'get':
                 if(modi){
                     type= modi;
-                    tileModal.innerHTML= `Modificar ${data.nombre}`
+                    tileModal.innerHTML= `Modificar ${data.nombre ? data.nombre : data.id}`
                 }else
-                    tileModal.innerHTML= data.nombre;
+                    tileModal.innerHTML= data.nombre ? data.nombre : data.id;
                 break;
             case 'create':
-
-                break;
-            case 'modify':
-                const btnSave = document.getElementById('save-modal')    
                 btnSave.classList.remove('hidden')
                 switch(list){
+                    case 'product':
+                        btnSave.setAttribute('onclick', 'createProduct()')
+                        tileModal.innerHTML= 'Crear Producto';
+                        break;
+                    case 'client':
+                        btnSave.setAttribute('onclick', 'createClient()')
+                        tileModal.innerHTML= 'Crear Cliente';
+                        break;
+                    case 'order':
+                        btnSave.setAttribute('onclick', 'createOrder()')
+                        tileModal.innerHTML= 'Crear Pedido';
+                        break;
+                    case 'material':
+                        btnSave.setAttribute('onclick', 'createMaterial()')
+                        tileModal.innerHTML= 'Crear Materia Prima';
+                        break;
+                    case 'personal':
+                        btnSave.setAttribute('onclick', 'createClient()')
+                        tileModal.innerHTML= 'Crear Cliente';
+                        break;
+                }
+                break;
+            case 'modify':
+                btnSave.classList.remove('hidden')
+                switch(list){
+                    case 'product':
+                        btnSave.setAttribute('onclick', `modifyProduct(${data})`)
+                        getDataProduct(data, 'modify');
+                        break;
+                    case 'client':  
+                        btnSave.setAttribute('onclick', `modifyClient(${data})`)
+                        getDataClient(data, 'modify');
+                        break;
+                    case 'order':  
+                        btnSave.setAttribute('onclick', `modifyOrder(${data})`)
+                        getDataOrder(data, 'modify');
+                        break;
                     case 'personal':
                         btnSave.setAttribute('onclick', `modifyPersonal(${data})`)
                         getDataPersonal(data, 'modify');
@@ -680,7 +673,8 @@ function closeFullModal(use){
     document.getElementById('save-modal').classList.add('hidden')
 
     document.querySelectorAll('.marca').forEach(element => {
-        element.disabled = true
+        element.disabled = false
+        element.value= ''
         element.classList.remove('marca')
     })
 }
@@ -702,18 +696,29 @@ function createModal(object){
     const container = document.getElementById(`modal-${object.use}`)
     container.classList.remove('hidden')
     
+    if(object.type === 'create'){
+        container.querySelectorAll('input').forEach(element => {
+            element.classList.add('marca')
+        })
+        container.querySelectorAll('select').forEach(element => {
+            element.classList.add('marca')
+        })
+        container.querySelectorAll('textarea').forEach(element => {
+            element.classList.add('marca')
+        })
+    }
+
     let input = ''
     for(let key in object.data) {
         try{
-            console.log(`modal-${object.use}-${key}`)
             input = document.getElementById(`modal-${object.use}-${key}`)
            
             if(input){
                 input.value = object.data[key]
-                if(object.type != 'get'){
-                    input.disabled = false
-                    input.classList.add('marca')
+                if(object.type === 'get'){
+                    input.disabled = true
                 }
+                input.classList.add('marca')
             }
         }catch(error){
             console.error(error)
@@ -726,55 +731,75 @@ function createModal(object){
 // function crear producto -> FUNCIONA
 function createProduct(){
     
+    let listValue = {}
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        let key = i[i.length - 1]
+        
+        if(key === 'etiquetas'){
+            listValue[ key ] = input.value.split(',')
+        }else
+            listValue[ key ] = input.value
+        
+    })
+    console.log(listValue)
+
     makePost(URL_CREATE_PRODUCT, {
         'id': 0,
-        'nombre': 'Producto 1 modificado',
-        'cantidad': 999,
-        "precio": 100,
-        'fecha_inicio_venta': '2021-01-09',
-        'fecha_fin_venta': '2021-01-09',
-        'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'],
-        'descripcion': 'No hay mucho que poner en un producto ficticio'
+        'nombre': listValue.nombre,
+        'cantidad': listValue.cantidad,
+        "precio": listValue.precio,
+        'fecha_inicio_venta': listValue.fecha_inicio_venta,
+        'fecha_fin_venta': listValue.fecha_fin_venta,
+        'etiquetas': listValue.etiquetas,
+        'descripcion': listValue.descripcion,
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('product')
         })
         .catch(err => console.error)
 }
 
-
-function modifyProduct(){
+// FUNCIONA
+function modifyProduct(id){
     
+    console.log(id)
+    let listValue= {}
+
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
+
     makePost(URL_MODIFY_PRODUCT, {
-        'id': 0,
-        'nombre': 'Producto 1',
-        'cantidad': 999,
-        "precio": 100,
-        'fecha_inicio_venta': '2021-01-09',
-        'fecha_fin_venta': '2021-01-09',
-        'etiquetas': ['Etiqueta 1', 'Etiqueta 2', 'Etiqueta 3'],
-        'descripcion': 'No hay mucho que poner en un producto ficticio'
+        id,
+        'nombre': listValue.nombre,
+        'cantidad': listValue.cantidad,
+        "precio": listValue.precio,
+        'fecha_inicio_venta': listValue.fecha_inicio_venta,
+        'fecha_fin_venta': listValue.fecha_fin_venta,
+        'etiquetas': listValue.etiquetas,
+        'descripcion': listValue.descripcion,
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('product')
         })
         .catch(err => console.error)
 }
 
 // function get dato producto -> FUNCIONA
-function getDataProduct(){
+function getDataProduct(id, modify){
     
     makePost(URL_GET_PRODUCT, {
-        'id': 0
+        id
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            showFullModal('get-product', data, modify)
         })
         .catch(err => console.error)
 }
@@ -785,75 +810,115 @@ function getDataProduct(){
 // function create client -> FUNCTIONA
 function createClient(){
 
+    let listValue = {}
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
+
     makePost(URL_CREATE_CLIENT, {
         "id": 0,
-        "email": "clienteTest1@gmail.com",
-        "nombre": "Nombre Cliente",
-        "apellido": "Apellido 1",
+        "email": listValue.email,
+        "nombre": listValue.nombre,
+        "apellido": listValue.apellido,
         "apellido2": "Apellido 2",
-        "telefono": "666666666",
-        "edad": 99,
-        "fecha_nacimiento": new Date().toISOString(),
-        "domicilio": "None",
-        "sexo": "X"
+        "telefono": listValue.telefono,
+        "edad": listValue.edad,
+        "fecha_nacimiento": listValue.fecha_nacimiento,
+        "domicilio": listValue.domicilio,
+        "sexo": listValue.sexo,
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('client')
         })
         .catch(err => console.error)
 }
 
 // function modify client -> FUNCTIONA
-function modifyClient(){
+function modifyClient(id){
+
+    console.log(id)
+    let listValue= {}
+
+    let listOrigin = keysClients.filter(key => key.id == id);
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
 
     makePost(URL_MODIFY_CLIENT, {
         "id": 0,
-        "email": "clienteTest1@gmail.com",
-        "nombre": "TU MADRE",
-        "apellido": "ELLA",
+        "email": listValue.email,
+        "nombre": listValue.nombre,
+        "apellido": listValue.apellido,
         "apellido2": "Apellido 2",
-        "telefono": "666666666",
-        "edad": 99,
-        "fecha_nacimiento": new Date().toISOString(),
-        "domicilio": "None",
-        "sexo": "X"
+        "telefono": listValue.telefono,
+        "edad": listValue.edad,
+        "fecha_nacimiento": listValue.fecha_nacimiento,
+        "domicilio": listValue.domicilio,
+        "sexo": listValue.sexo
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('client')
         })
         .catch(err => console.error)
 }
 
 // function get data client -> FUNCTIONA
-function getDataClient(){
+function getDataClient(id, modify){
 
     makePost(URL_GET_CLIENT, {
-        "id": 0
+        id
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            showFullModal('get-client', data, modify)
         })
         .catch(err => console.error)
 }
 
 // function delete client -> FUNCTIONA
-function deleteClient(){
+function deleteClient(id){
 
-    makePost(URL_DELETE_CLIENT, {
-        "id": 0
-    })
-        .then(data => {
-            console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+    showModalDelete()
+        .then((result) => {
+            if (result.isConfirmed) {
+               
+                makePost(URL_DELETE_CLIENT, {
+                    "id": id
+                })
+                .then(data => {
+                    
+                    console.log(data);
+                    
+                    const clien = keysClients.filter(per => per.id === id)[0]
+    
+                    if(data.params && data.post_result){
+                        printListClients(keysClients.filter(clien => clien.id != id))
+                        Swal.fire(
+                            'Ha sido eliminado!',
+                            `${clien.nombre} ha sido eliminado`,
+                            'success'
+                        )
+                    } else{
+                        Swal.fire(
+                            'Ha ocurrido un error',
+                            `No se ha podido eliminar a ${clien.nombre}`,
+                            'warning'
+                        )
+                    }
+                })
+                .catch(err => console.error)
+
+            }
         })
-        .catch(err => console.error)
+        
 }
 
 
@@ -861,34 +926,51 @@ function deleteClient(){
 // function create order -> FUNCIONA
 function createOrder(){
 
+    let listValue = {}
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
+
     makePost(URL_CREATE_ORDER, {
         "id": 0, 
-        "id_cliente": 0, 
-        "enviar_a_domicilio": true, 
-        "id_producto": 0, 
-        "fecha_entrega": new Date().toISOString(), 
-        "fecha_compra": new Date().toISOString(),
-        "fecha_entregado": new Date().toISOString()
+        "id_cliente": listValue.id_cliente, 
+        "enviar_a_domicilio": listValue.enviar_a_domicilio === 'true' ? true : false, 
+        "id_producto": listValue.id_producto, 
+        "fecha_entrega": listValue.fecha_entrega, 
+        "fecha_compra": listValue.fecha_compra,
+        "fecha_entregado": listValue.fecha_entregado
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('order')
         })
         .catch(err => console.error)
 }
 
 // function modify order ->  FUNCTIONA
-function modifyOrder(){
+function modifyOrder(id){
+
+    console.log(id)
+    let listValue= {}
+
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
 
     makePost(URL_MODIFY_ORDER, {
-        "id": 0, 
-        "id_cliente": 0, 
-        "enviar_a_domicilio": false, 
-        "id_producto": 0, 
-        "fecha_entrega": new Date().toISOString(), 
-        "fecha_compra": new Date().toISOString(),
-        "fecha_entregado": new Date().toISOString()
+        id,
+        "id_cliente": listValue.id_cliente, 
+        "enviar_a_domicilio": listValue.enviar_a_domicilio === 'true' ? true : false, 
+        "id_producto": listValue.id_producto, 
+        "fecha_entrega": listValue.fecha_entrega, 
+        "fecha_compra": listValue.fecha_compra,
+        "fecha_entregado": listValue.fecha_entregado
     })
         .then(data => {
             console.log(data);
@@ -899,31 +981,52 @@ function modifyOrder(){
 }
 
 // function get order ->  FUNCIONA
-function getOrder(){
+function getDataOrder(id, modify){
 
     makePost(URL_GET_ORDER, {
-        "id": 0
+        id
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            showFullModal('get-order', data, modify)
         })
         .catch(err => console.error)
 }
 
 // function delete order ->  FUNCIONA
-function deleteOrder(){
+function deleteOrder(id){
 
-    makePost(URL_DELETE_ORDER, {
-        "id": 0
+    showModalDelete()
+    .then((result) => {
+        if (result.isConfirmed) {
+            makePost(URL_DELETE_ORDER, {
+                "id": 0
+            })
+                .then(data => {
+                    console.log(data);
+                    
+                    const orid = keysOrders.filter(per => per.id === id)[0]
+    
+                    if(data.params && data.post_result){
+                        printListClients(keysOrders.filter(clien => clien.id != id))
+                        Swal.fire(
+                            'Ha sido eliminado!',
+                            `${orid.id} ha sido eliminado`,
+                            'success'
+                        )
+                    } else{
+                        Swal.fire(
+                            'Ha ocurrido un error',
+                            `No se ha podido eliminar a ${orid.id}`,
+                            'warning'
+                        )
+                    }
+
+                })
+                .catch(err => console.error)
+        }
     })
-        .then(data => {
-            console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
-        })
-        .catch(err => console.error)
+
 }
 
 
@@ -932,48 +1035,75 @@ function deleteOrder(){
 // function create material ->  FUNCIONA
 function createMaterial(){
 
+    let listValue = {}
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+
+    console.log(listValue)
+
     makePost(URL_CREATE_MATERIAL, {
         "id": 0,
-        "tipo_materia": 0,
-        "cantidad": 5,
+        "tipo_materia": listValue.tipo_materia,
+        "cantidad": listValue.cantidad,
         "registro": {'casa': 'casa'},
-        "cantidad_recibida": 1,
-        "fecha_llegada": new Date().toISOString()
+        "cantidad_recibida": listValue.cantidad_recibida,
+        "fecha_llegada": listValue.fecha_llegada
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            closeFullModal('material')
         })
         .catch(err => console.error)
 }
 
 // function get material ->  FUNCIONA
-function getDataMaterial(){
+function getDataMaterial(id, modify){
 
     makePost(URL_GET_MATERIAL, {
-        "id": 0
+        id
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            showFullModal('get-material', data, modify)
         })
         .catch(err => console.error)
 }
 
 // function delete material ->  FUNCIONA
-function deleteMaterial(){
+function deleteMaterial(id){
 
-    makePost(URL_DELETE_MATERIAL, {
-        "id": 0
+    showModalDelete()
+        .then((result) => {
+        if (result.isConfirmed) {
+
+            makePost(URL_DELETE_MATERIAL, {
+                id
+            })
+                .then(data => {
+                    console.log(data);
+                    const mat = keysMaterials.filter(per => per.id === id)[0]
+    
+                    if(data.params && data.post_result){
+                        printListClients(keysMaterials.filter(clien => clien.id != id))
+                        Swal.fire(
+                            'Ha sido eliminado!',
+                            `${mat.nombre} ha sido eliminado`,
+                            'success'
+                        )
+                    } else{
+                        Swal.fire(
+                            'Ha ocurrido un error',
+                            `No se ha podido eliminar a ${mat.nombre}`,
+                            'warning'
+                        )
+                    }
+                })
+                .catch(err => console.error)
+
+        }
     })
-        .then(data => {
-            console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
-        })
-        .catch(err => console.error)
 }
 
 
@@ -981,28 +1111,50 @@ function deleteMaterial(){
 // function create personal -> FUNCIONA 
 function createPersonal(){
 
-    makePost(URL_CREATE_PERSONAL, {
-        "id": 0,
-
-        "email": "me@me.es",
-        "nombre": "NameSoy",
-        "apellido": "Apellido 1",
-        "apellido2": "Apellido 2",
-        "telefono": "666666666",
-        "edad": 99,
-        "fecha_nacimiento": new Date().toISOString(),
-        "domicilio": "None",
-        "sexo": "X",
-        
-        "acceso": 2,
-        "password": "abc123"
+    let listValue = {}
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
     })
-        .then(data => {
-            console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
-        })
-        .catch(err => console.error)
+  
+    Swal.fire({
+        title: "Escribe la contraseña para este usuario",
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        cancelButtonText: "Cancelar",
+    })
+    .then(resultado => {
+        if (resultado.value) {
+           listValue.password = resultado.value;
+
+            const jsonSend = {
+                "id": 0,
+        
+                "email": listValue.email,
+                "nombre": listValue.nombre,
+                "apellido": listValue.apellido,
+                "apellido2": listValue.apellido,
+                "telefono": listValue.telefono,
+                "edad": listValue.edad,
+                "fecha_nacimiento": listValue.fecha_nacimiento,
+                "domicilio": "None",
+                "sexo": listValue.sexo,
+                
+                "acceso": listValue.acceso,
+                "password": listValue.password
+            }
+            
+           makePost(URL_CREATE_PERSONAL, jsonSend)
+            .then(data => {
+                console.log(data);
+                closeFullModal('personal')
+            })
+            .catch(err => console.error)
+        }
+    });
+
+    
 }
 
 // function modify personal ->  
@@ -1015,8 +1167,7 @@ function modifyPersonal(id){
         let i = input.id.split('-')
         listValue[ i[i.length - 1] ] = input.value
     })
-    console.log(listValue)
-
+    
     makePost(URL_MODIFY_PERSONAL, {
         "id": id,
 
