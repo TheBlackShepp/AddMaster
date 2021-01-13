@@ -1242,7 +1242,7 @@ function imprimirPDF(id){
     })
         .then(data => {
             console.log(data);
-            makeGet(`getFile/${data.pdfname}`)
+            window.location= `${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/getFile/${data.pdfname}`
         })
         .catch(err => console.error)
 }
