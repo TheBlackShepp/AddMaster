@@ -86,8 +86,7 @@ const makePost = async(url, datos) => {
             makePost(URL_GET_LIST_CLIENT, {})
                 .then(data => {
                     console.log(data);
-                    let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-                    printListClients(list)
+                    printListClients(data.clients)
                 })
                 .catch(err => console.error)
             break;
@@ -96,8 +95,7 @@ const makePost = async(url, datos) => {
             makePost(URL_GET_LIST_ORDER, {})
                 .then(data => {
                     console.log(data);
-                    let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-                    printListOrders(list)
+                    printListOrders(data.pedido)
                 })
                 .catch(err => console.error)
             break;
@@ -106,8 +104,7 @@ const makePost = async(url, datos) => {
             makePost(URL_GET_LIST_MATERIAL, {})
             .then(data => {
                 console.log(data);
-                let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-                printListOrders(list)
+                printListMaterial(data.materias)
             })
             .catch(err => console.error)
             break;
@@ -116,8 +113,7 @@ const makePost = async(url, datos) => {
             makePost(URL_GET_LIST_PERSONAL, {})
             .then(data => {
                 console.log(data);
-                let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-                printListOrders(list)
+                printListPersonal(data.users)
             })
             .catch(err => console.error)
             break;
@@ -141,7 +137,7 @@ const makeCardProduct = (product) => {
     return `
         <div class="max-w-md w-full lg:flex shadow cursor-pointer" onclick="viewDetailsProduct(1)">
             <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" title="Woman holding a mug">
-            <img class="w-full h-full object-cover" src="/static/img/${listImg[Math.random()]}" alt="vino">
+            <img class="w-full h-full object-cover" src="/static/img/${listImg[Math.ceil(Math.random()*2) - 1 ]}" alt="vino">
             </div>
             <div class="bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div class="mb-8">
@@ -169,7 +165,7 @@ function printListProducts(listProducts){
 const makeRowClient = (client) => {
 
     return `
-        <tr class="text-gray-700 dark:text-gray-400">
+        <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
             <td class="px-4 py-3">
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
@@ -188,15 +184,15 @@ const makeRowClient = (client) => {
                 ></div>
                 </div>
                 <div>
-                <p class="font-semibold">${client.name}</p>
+                <p class="font-semibold">${client.nombre} ${client.apellido}</p>
                 </div>
             </div>
             </td>
             <td class="px-4 py-3 text-sm">
-            $ 863.45
+            ${client.email}
             </td>
             <td class="px-4 py-3 text-sm">
-            6/10/2020
+            ${client.telefono}
             </td>
             <td class="px-4 py-3">
             <div class="flex items-center space-x-4 text-sm">
@@ -252,8 +248,19 @@ function printListClients(listClients){
 // pintar pedidos
 const makeRowOrder = (order) => {
 
+    let domicilio = ''
+    if(order.enviar_a_domicilio){
+        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100" >
+            si
+        </span>`
+    }else{
+        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:bg-green-700 dark:text-green-100" >
+        no
+    </span>`
+    }
+
     return `
-        <tr class="text-gray-700 dark:text-gray-400">
+        <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
             <td class="px-4 py-3">
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
@@ -272,25 +279,14 @@ const makeRowOrder = (order) => {
                 ></div>
                 </div>
                 <div>
-                <p class="font-semibold">Hans Burger</p>
-                <p class="text-xs text-gray-600 dark:text-gray-400">
-                    10x Developer
-                </p>
-                </div>
+                <p class="font-semibold">${order.id_cliente}</p>
             </div>
             </td>
             <td class="px-4 py-3 text-sm">
-            $ 863.45
+            ${order.fecha_compra}
             </td>
             <td class="px-4 py-3 text-xs">
-            <span
-                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
-            >
-                Approved
-            </span>
-            </td>
-            <td class="px-4 py-3 text-sm">
-            6/10/2020
+                ${domicilio}
             </td>
             <td class="px-4 py-3">
             <div class="flex items-center space-x-4 text-sm">
@@ -344,6 +340,206 @@ function printListOrders(listOrders){
     container.innerHTML = text; 
 }
 
+// pintar materias prima
+const makeRowMaterial = (material) => {
+
+    let domicilio = ''
+    if(order.enviar_a_domicilio){
+        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100" >
+            si
+        </span>`
+    }else{
+        domicilio = ` <span class="px-7 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:bg-green-700 dark:text-green-100" >
+        no
+    </span>`
+    }
+
+    return `
+        <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
+            <td class="px-4 py-3">
+            <div class="flex items-center text-sm">
+                <!-- Avatar with inset shadow -->
+                <div
+                class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
+                >
+                <img
+                    class="object-cover w-full h-full rounded-full"
+                    src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                    alt=""
+                    loading="lazy"
+                />
+                <div
+                    class="absolute inset-0 rounded-full shadow-inner"
+                    aria-hidden="true"
+                ></div>
+                </div>
+                <div>
+                <p class="font-semibold">${order.id_cliente}</p>
+            </div>
+            </td>
+            <td class="px-4 py-3 text-sm">
+            ${order.fecha_compra}
+            </td>
+            <td class="px-4 py-3 text-xs">
+                ${domicilio}
+            </td>
+            <td class="px-4 py-3">
+            <div class="flex items-center space-x-4 text-sm">
+                <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Edit"
+                onclick="viewDetailsOrder('order')"
+                >
+                <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    ></path>
+                </svg>
+                </button>
+                <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Delete"
+                onclick="deleteOrder('order')"
+                >
+                <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                    fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                    ></path>
+                </svg>
+                </button>
+            </div>
+            </td>
+        </tr>
+    `
+}
+function printListMaterial(listMaterial) {
+    const container = document.getElementById('container-material');
+
+    let text = ''
+    listMaterial.forEach(order => {
+        text+= makeRowMaterial(order);
+    })
+
+    container.innerHTML = text; 
+}
+
+// pintar usuarios
+const makeRowPersonal = (personal) => {
+
+    let permision= ''
+    switch (personal.acceso) {
+        case 0:
+            permision='Dolores';
+            break;
+        case 1:
+            permision= 'Personal';
+            break;
+        case 2:
+            permision = 'Administrador';
+            break;
+    }
+    permision = `<span class="px-7 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100" >
+        ${permision}
+    </span>`
+
+    return `
+        <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
+            <td class="px-4 py-3">
+            <div class="flex items-center text-sm">
+                <!-- Avatar with inset shadow -->
+                <div
+                class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
+                >
+                <img
+                    class="object-cover w-full h-full rounded-full"
+                    src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                    alt=""
+                    loading="lazy"
+                />
+                <div
+                    class="absolute inset-0 rounded-full shadow-inner"
+                    aria-hidden="true"
+                ></div>
+                </div>
+                <div>
+                <p class="font-semibold">${personal.nombre} ${personal.apellido}</p>
+            </div>
+            </td>
+            <td class="px-4 py-3 text-sm">
+                ${personal.email}
+            </td>
+            <td class="px-4 py-3 text-xs">
+                ${permision}
+            </td>
+            <td class="px-4 py-3 text-xs">
+                ${personal.telefono}
+            </td>
+            <td class="px-4 py-3">
+            <div class="flex items-center space-x-4 text-sm">
+                <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Edit"
+                onclick="viewDetailsPersonal(${personal.id})"
+                >
+                <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    ></path>
+                </svg>
+                </button>
+                <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Delete"
+                onclick="deletePersonal(${personal.id})"
+                >
+                <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                    fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                    ></path>
+                </svg>
+                </button>
+            </div>
+            </td>
+        </tr>
+    `
+}
+function printListPersonal(listPersonal) {
+    const container = document.getElementById('container-personal');
+
+    let text = ''
+    listPersonal.forEach(order => {
+        text+= makeRowPersonal(order);
+    })
+
+    container.innerHTML = text; 
+}
+
+
+
 // view details product
 function viewDetailsProduct(id){
     console.log(id)
@@ -369,6 +565,11 @@ function viewDetailsOrder(id){
     createModal(o)
 }
 
+// view detail personal
+function viewDetailsPersonal(id){
+    console.log(id)
+    showFullModal()
+}
 
 
 // eliminar cliente
