@@ -43,6 +43,19 @@ const URL_GET_PERSONAL= 'get_datos_usuario'
 const URL_DELETE_PERSONAL= 'eliminar_usuario'
 const URL_MODIFY_PERSONAL= 'modificar_usuario'
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+  
+
 const makeGet = async(url) => {
 
     const response = fetch(`${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/${url}`);
@@ -743,28 +756,31 @@ function createProduct(){
             listValue[ key ] = input.value.split(',')
         }else
             listValue[ key ] = input.value
-        
-        console.log(input, input.value)
-
+       
     })
-    console.log(listValue)
-
-    makePost(URL_CREATE_PRODUCT, {
-        'id': 0,
-        'nombre': listValue.nombre,
-        'cantidad': listValue.cantidad,
-        "precio": listValue.precio,
-        'fecha_inicio_venta': listValue.fecha_inicio_venta,
-        'fecha_fin_venta': listValue.fecha_fin_venta,
-        'etiquetas': listValue.etiquetas,
-        'descripcion': listValue.descripcion,
-    })
-        .then(data => {
-            console.log(data);
-            get_productos()
-            closeFullModal('product')
+   
+    if(inputFree(listValue))
+        makePost(URL_CREATE_PRODUCT, {
+            'id': 0,
+            'nombre': listValue.nombre,
+            'cantidad': listValue.cantidad,
+            "precio": listValue.precio,
+            'fecha_inicio_venta': listValue.fecha_inicio_venta,
+            'fecha_fin_venta': listValue.fecha_fin_venta,
+            'etiquetas': listValue.etiquetas,
+            'descripcion': listValue.descripcion,
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_productos()
+                closeFullModal('product')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        }) 
 }
 
 // FUNCIONA
@@ -780,22 +796,28 @@ function modifyProduct(id){
 
     console.log(listValue)
 
-    makePost(URL_MODIFY_PRODUCT, {
-        id,
-        'nombre': listValue.nombre,
-        'cantidad': listValue.cantidad,
-        "precio": listValue.precio,
-        'fecha_inicio_venta': listValue.fecha_inicio_venta,
-        'fecha_fin_venta': listValue.fecha_fin_venta,
-        'etiquetas': listValue.etiquetas,
-        'descripcion': listValue.descripcion,
-    })
-        .then(data => {
-            console.log(data);
-            get_productos()
-            closeFullModal('product')
+    if(inputFree(listValue))
+        makePost(URL_MODIFY_PRODUCT, {
+            id,
+            'nombre': listValue.nombre,
+            'cantidad': listValue.cantidad,
+            "precio": listValue.precio,
+            'fecha_inicio_venta': listValue.fecha_inicio_venta,
+            'fecha_fin_venta': listValue.fecha_fin_venta,
+            'etiquetas': listValue.etiquetas,
+            'descripcion': listValue.descripcion,
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_productos()
+                closeFullModal('product')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function get dato producto -> FUNCIONA
@@ -812,8 +834,6 @@ function getDataProduct(id, modify){
 }
 
 
-
-
 // function create client -> FUNCTIONA
 function createClient(){
 
@@ -825,24 +845,30 @@ function createClient(){
 
     console.log(listValue)
 
-    makePost(URL_CREATE_CLIENT, {
-        "id": 0,
-        "email": listValue.email,
-        "nombre": listValue.nombre,
-        "apellido": listValue.apellido,
-        "apellido2": "Apellido 2",
-        "telefono": listValue.telefono,
-        "edad": listValue.edad,
-        "fecha_nacimiento": listValue.fecha_nacimiento,
-        "domicilio": listValue.domicilio,
-        "sexo": listValue.sexo,
-    })
-        .then(data => {
-            console.log(data);
-            get_clientes()
-            closeFullModal('client')
+    if(inputFree(listValue))
+        makePost(URL_CREATE_CLIENT, {
+            "id": 0,
+            "email": listValue.email,
+            "nombre": listValue.nombre,
+            "apellido": listValue.apellido,
+            "apellido2": "Apellido 2",
+            "telefono": listValue.telefono,
+            "edad": listValue.edad,
+            "fecha_nacimiento": listValue.fecha_nacimiento,
+            "domicilio": listValue.domicilio,
+            "sexo": listValue.sexo,
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_clientes()
+                closeFullModal('client')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function modify client -> FUNCTIONA
@@ -859,24 +885,30 @@ function modifyClient(id){
 
     console.log(listValue)
 
-    makePost(URL_MODIFY_CLIENT, {
-        id,
-        "email": listValue.email,
-        "nombre": listValue.nombre,
-        "apellido": listValue.apellido,
-        "apellido2": "Apellido 2",
-        "telefono": listValue.telefono,
-        "edad": listValue.edad,
-        "fecha_nacimiento": listValue.fecha_nacimiento,
-        "domicilio": listValue.domicilio,
-        "sexo": listValue.sexo
-    })
-        .then(data => {
-            console.log(data);
-            get_clientes()
-            closeFullModal('client')
+    if(inputFree(listValue))
+        makePost(URL_MODIFY_CLIENT, {
+            id,
+            "email": listValue.email,
+            "nombre": listValue.nombre,
+            "apellido": listValue.apellido,
+            "apellido2": "Apellido 2",
+            "telefono": listValue.telefono,
+            "edad": listValue.edad,
+            "fecha_nacimiento": listValue.fecha_nacimiento,
+            "domicilio": listValue.domicilio,
+            "sexo": listValue.sexo
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_clientes()
+                closeFullModal('client')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function get data client -> FUNCTIONA
@@ -955,13 +987,19 @@ function createOrder(){
 
     console.log('HOLA', c)
 
-    makePost(URL_CREATE_ORDER, c)
-        .then(data => {
-            console.log(data);
-            get_pedidos()
-            closeFullModal('order')
+    if(inputFree(listValue))
+        makePost(URL_CREATE_ORDER, c)
+            .then(data => {
+                console.log(data);
+                get_pedidos()
+                closeFullModal('order')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
         })
-        .catch(err => console.error)
 }
 
 // function modify order ->  FUNCTIONA
@@ -977,21 +1015,27 @@ function modifyOrder(id){
 
     console.log(listValue)
 
-    makePost(URL_MODIFY_ORDER, {
-        id,
-        "id_cliente": listValue.id_cliente, 
-        "enviar_a_domicilio": listValue.enviar_a_domicilio === "true" ? true : false, 
-        "id_producto": listValue.id_producto, 
-        "fecha_entrega": listValue.fecha_entrega, 
-        "fecha_compra": listValue.fecha_compra,
-        "fecha_entregado": listValue.fecha_entregado
-    })
-        .then(data => {
-            console.log(data);
-            get_pedidos()
-            closeFullModal('order')
+    if(inputFree(listValue))
+        makePost(URL_MODIFY_ORDER, {
+            id,
+            "id_cliente": listValue.id_cliente, 
+            "enviar_a_domicilio": listValue.enviar_a_domicilio === "true" ? true : false, 
+            "id_producto": listValue.id_producto, 
+            "fecha_entrega": listValue.fecha_entrega, 
+            "fecha_compra": listValue.fecha_compra,
+            "fecha_entregado": listValue.fecha_entregado
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_pedidos()
+                closeFullModal('order')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function get order ->  FUNCIONA
@@ -1055,20 +1099,26 @@ function createMaterial(){
 
     console.log(listValue)
 
-    makePost(URL_CREATE_MATERIAL, {
-        "id": 0,
-        "tipo_materia": listValue.tipo_materia,
-        "cantidad": listValue.cantidad,
-        "registro": {'casa': 'casa'},
-        "cantidad_recibida": listValue.cantidad_recibida,
-        "fecha_llegada": listValue.fecha_llegada
-    })
-        .then(data => {
-            console.log(data);
-            get_materias()
-            closeFullModal('material')
+    if(inputFree(listValue))
+        makePost(URL_CREATE_MATERIAL, {
+            "id": 0,
+            "tipo_materia": listValue.tipo_materia,
+            "cantidad": listValue.cantidad,
+            "registro": {'casa': 'casa'},
+            "cantidad_recibida": listValue.cantidad_recibida,
+            "fecha_llegada": listValue.fecha_llegada
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_materias()
+                closeFullModal('material')
+            })
+            .catch(err => console.error)
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function get material ->  FUNCIONA
@@ -1130,46 +1180,54 @@ function createPersonal(){
         listValue[ i[i.length - 1] ] = input.value
     })
   
-    Swal.fire({
-        title: "Escribe la contraseña para este usuario",
-        input: "text",
-        showCancelButton: true,
-        confirmButtonText: "Guardar",
-        cancelButtonText: "Cancelar",
-    })
-    .then(resultado => {
-        if (resultado.value) {
-           listValue.password = resultado.value;
+    if(inputFree(listValue))
 
-            const jsonSend = {
-                "id": 0,
-        
-                "email": listValue.email,
-                "nombre": listValue.nombre,
-                "apellido": listValue.apellido,
-                "apellido2": listValue.apellido,
-                "telefono": listValue.telefono,
-                "edad": listValue.edad,
-                "fecha_nacimiento": listValue.fecha_nacimiento,
-                "domicilio": "None",
-                "sexo": listValue.sexo,
-                
-                "acceso": listValue.acceso,
-                "password": listValue.password
-            }
+        Swal.fire({
+            title: "Escribe la contraseña para este usuario",
+            input: "text",
+            showCancelButton: true,
+            confirmButtonText: "Guardar",
+            cancelButtonText: "Cancelar",
+        })
+        .then(resultado => {
+            if (resultado.value) {
+            listValue.password = resultado.value;
+
+                const jsonSend = {
+                    "id": 0,
             
-            console.log(jsonSend)
+                    "email": listValue.email,
+                    "nombre": listValue.nombre,
+                    "apellido": listValue.apellido,
+                    "apellido2": listValue.apellido,
+                    "telefono": listValue.telefono,
+                    "edad": listValue.edad,
+                    "fecha_nacimiento": listValue.fecha_nacimiento,
+                    "domicilio": "None",
+                    "sexo": listValue.sexo,
+                    
+                    "acceso": listValue.acceso,
+                    "password": listValue.password
+                }
+                
+                console.log(jsonSend)
 
-           makePost(URL_CREATE_PERSONAL, jsonSend)
-            .then(data => {
-                console.log(data);
-                get_personal()
-                closeFullModal('personal')
-            })
-            .catch(err => console.error)
-        }
-    });
+                
+            makePost(URL_CREATE_PERSONAL, jsonSend)
+                .then(data => {
+                    console.log(data);
+                    get_personal()
+                    closeFullModal('personal')
+                })
+                .catch(err => console.error)
+            }
+        });
 
+    else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
     
 }
 
@@ -1184,28 +1242,35 @@ function modifyPersonal(id){
         listValue[ i[i.length - 1] ] = input.value
     })
     
-    makePost(URL_MODIFY_PERSONAL, {
-        "id": id,
 
-        "email": listValue.email,
-        "nombre": listValue.nombre,
-        "apellido": listValue.apellido,
-        "apellido2": "Apellido 2",
-        "telefono": listValue.telefono,
-        "edad": listValue.edad,
-        "fecha_nacimiento": listValue.fecha_nacimiento,
-        "domicilio": "None",
-        "sexo": listValue.sexo,
-        
-        "acceso": listValue.acceso,
-        "password": ''
-    })
-        .then(data => {
-            console.log(data);
-            get_personal()
-            closeFullModal('personal');
+    if(inputFree(listValue)){
+        makePost(URL_MODIFY_PERSONAL, {
+            "id": id,
+
+            "email": listValue.email,
+            "nombre": listValue.nombre,
+            "apellido": listValue.apellido,
+            "apellido2": "Apellido 2",
+            "telefono": listValue.telefono,
+            "edad": listValue.edad,
+            "fecha_nacimiento": listValue.fecha_nacimiento,
+            "domicilio": "None",
+            "sexo": listValue.sexo,
+            
+            "acceso": listValue.acceso,
+            "password": ''
         })
-        .catch(err => console.error)
+            .then(data => {
+                console.log(data);
+                get_personal()
+                closeFullModal('personal');
+            })
+            .catch(err => console.error)
+    }else
+        Toast.fire({
+            icon: 'error',
+            title: 'No puedes dejar ningun campo vacio'
+        })
 }
 
 // function get data personal ->  
@@ -1260,4 +1325,13 @@ function imprimirPDF(id){
             window.location= `${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/getFile/${data.pdfname}`
         })
         .catch(err => console.error)
+}
+
+function inputFree(object){
+    for(let i in object){
+        if(object[i]=== ''){
+            return false;
+        }
+    }
+    return true;
 }
