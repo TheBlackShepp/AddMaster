@@ -326,7 +326,7 @@ class DatabaseController(DebugClass):
     # endregion
     # region Pedido Detalle
     def igresar_datos_pedido(self, formulario: dict) -> None:
-        formulario.update({"id": self.__last_producto_id})
+        formulario.update({"id": self.__last_pedido_id})
         p = PedidoDetalle()
         p.formulario(formulario)
         self.__pedido_list.append(p)
