@@ -6,3 +6,12 @@
     transform: translateY(100%);
     transition: all ease-in-out 0.5s;
 }
+
+#title-modal{
+    @apply flex-grow;
+}
+@media (min-width: 768px) {
+    #title-modal{
+        flex: 0.5 1;
+    }
+}

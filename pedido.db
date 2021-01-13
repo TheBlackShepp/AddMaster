@@ -1,1 +1,1 @@
-"{\"pedido\": [{\"id\": 1, \"id_cliente\": 0, \"enviar_a_domicilio\": true, \"id_producto\": 0, \"fecha_entrega\": \"2021-01-13T07:08:22.003Z\", \"fecha_compra\": \"2021-01-13T07:08:22.003Z\", \"fecha_entregado\": \"2021-01-13T07:08:22.003Z\"}], \"id\": 5}"
+"{\"pedido\": [{\"id\": 1, \"id_cliente\": 0, \"enviar_a_domicilio\": true, \"id_producto\": 0, \"fecha_entrega\": \"2021-01-13T11:41:18.342Z\", \"fecha_compra\": \"2021-01-13T11:41:18.342Z\", \"fecha_entregado\": \"2021-01-13T11:41:18.342Z\"}], \"id\": 6}"

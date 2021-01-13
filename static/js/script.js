@@ -1,14 +1,11 @@
 const LOCATION = document.location;
 const subpath = LOCATION.pathname.split('/')[LOCATION.pathname.split('/').length -1];
 
-const keysProducts = ['id', 'nombre', 'cantidad', 'precio', 'fecha_inicio_venta', 'fecha_fin_venta', 'etiquetas', 'descripcion']
-const keysClients = ['id', 'email', 'nombre', 'apellido', 'apellido2', 'telefono', 'edad', 'fecha_nacimiento', 'domicilio',
-'sexo']
-const keysOrders = ['id', 'id_cliente', 'enviar_a_domicilio', 'id_producto', 'fecha_entrega', 'fecha_compra',
-'fecha_entregado']
-const keysMaterials = ['id', 'tipo_materia', 'cantidad', 'registro', 'cantidad_recibida', 'fecha_llegada']
-const keysPersonal = ['id', 'email', 'nombre', 'apellido', 'apellido2', 'telefono', 'edad', 'fecha_nacimiento', 'domicilio',
-'sexo', 'acceso']
+let keysProducts = []
+let keysClients = []
+let keysOrders = []
+let keysMaterials = []
+let keysPersonal = []
 
 
 const URL_GET_LIST_PRODUCT = 'get_lista_productos'
@@ -456,7 +453,7 @@ const makeRowPersonal = (personal) => {
 
     return `
         <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" onclick="getDataPersonal(${personal.id})">
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
                 <div
@@ -477,13 +474,13 @@ const makeRowPersonal = (personal) => {
                 <p class="font-semibold">${personal.nombre} ${personal.apellido}</p>
             </div>
             </td>
-            <td class="px-4 py-3 text-sm">
+            <td class="px-4 py-3 text-sm" onclick="getDataPersonal(${personal.id})">
                 ${personal.email}
             </td>
-            <td class="px-4 py-3 text-xs">
+            <td class="px-4 py-3 text-xs" onclick="getDataPersonal(${personal.id})">
                 ${permision}
             </td>
-            <td class="px-4 py-3 text-xs">
+            <td class="px-4 py-3 text-xs" onclick="getDataPersonal(${personal.id})">
                 ${personal.telefono}
             </td>
             <td class="px-4 py-3">
@@ -491,7 +488,7 @@ const makeRowPersonal = (personal) => {
                 <button
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-${color} rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
-                onclick="viewDetailsPersonal(${personal.id})"
+                onclick="showFullModal('modify-personal',${personal.id})"
                 >
                 <svg
                     class="w-5 h-5"
@@ -536,6 +533,7 @@ function printListPersonal(listPersonal) {
     })
 
     container.innerHTML = text; 
+    keysPersonal= listPersonal;
 }
 
 
@@ -569,6 +567,7 @@ function viewDetailsOrder(id){
 function viewDetailsPersonal(id){
     console.log(id)
     showFullModal()
+    createModal
 }
 
 
@@ -602,21 +601,88 @@ function deleteOrder(id){
         })
 }
 
+// eliminar material
+function deleteMaterial(id){
+
+    showModalDelete()
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        })
+}
+
+// eliminar personal
+function deletePersonal(id){
+
+    console.log(id)
+
+    showModalDelete()
+        .then((result) => {
+            if (result.isConfirmed) {
+                eliminarPersonal(id)
+            }
+        })
+}
+
 // TODO show modal
-function showFullModal(typeOpen) {
+function showFullModal(typeOpen, data, modi) {
     const modal = document.getElementById('modal-full')
     modal.style.transform= 'translateY(6.5%)'
 
     if(typeOpen != undefined) {
-        console.log(typeOpen)
+        let type= typeOpen.split('-')[0];
+        const list= typeOpen.split('-')[1]
+        let datosPasar = data
+
+        const tileModal = document.getElementById('title-modal')
+        switch(type){
+            case 'get':
+                if(modi){
+                    type= modi;
+                    tileModal.innerHTML= `Modificar ${data.nombre}`
+                }else
+                    tileModal.innerHTML= data.nombre;
+                break;
+            case 'create':
+
+                break;
+            case 'modify':
+                const btnSave = document.getElementById('save-modal')    
+                btnSave.classList.remove('hidden')
+                switch(list){
+                    case 'personal':
+                        btnSave.setAttribute('onclick', `modifyPersonal(${data})`)
+                        getDataPersonal(data, 'modify');
+                        break;
+                }
+                return;
+        }
+        
+        document.getElementById('close-btn-modal').setAttribute('onclick', `closeFullModal('${list}')`)
+        createModal({type, 'use': list, data})
     }
 
 }
 
 // TODO close modal
-function closeFullModal(){
+function closeFullModal(use){
     const modal = document.getElementById('modal-full')
     modal.style.transform= 'translateY(100%)'
+
+    const container = document.getElementById(`modal-${use}`)
+    container.classList.add('hidden')
+
+    document.getElementById('save-modal').classList.add('hidden')
+
+    document.querySelectorAll('.marca').forEach(element => {
+        element.disabled = true
+        element.classList.remove('marca')
+    })
 }
 
 // TODO show swal
@@ -632,24 +698,28 @@ function showModalDelete(){
       })
 }
 
-// TODO create modal
-const inputGeneral = (key, value) => {
-    return `
-        <div class="flex flex-col m-5">
-            <label class="font-medium">${key}</label>
-            <input class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" value="${value}" />
-        </div>
-    `
-}
 function createModal(object){
-    const container = document.getElementById('container-modal')
-
-    let texto = ''
-    for (let key in object) {
-        texto+= inputGeneral(key, object[key])
-    }
+    const container = document.getElementById(`modal-${object.use}`)
+    container.classList.remove('hidden')
     
-    container.innerHTML = texto
+    let input = ''
+    for(let key in object.data) {
+        try{
+            console.log(`modal-${object.use}-${key}`)
+            input = document.getElementById(`modal-${object.use}-${key}`)
+           
+            if(input){
+                input.value = object.data[key]
+                if(object.type != 'get'){
+                    input.disabled = false
+                    input.classList.add('marca')
+                }
+            }
+        }catch(error){
+            console.error(error)
+        }
+    }
+
 }
 
 
@@ -935,57 +1005,78 @@ function createPersonal(){
         .catch(err => console.error)
 }
 
-// function modify personal ->  FUNCIONA
-function modifyPersonal(){
+// function modify personal ->  
+function modifyPersonal(id){
+
+    let listValue= {}
+    let listOrigin = keysPersonal.filter(key => key.id == id);
+
+    document.querySelectorAll('.marca').forEach(input => {
+        let i = input.id.split('-')
+        listValue[ i[i.length - 1] ] = input.value
+    })
+    console.log(listValue)
 
     makePost(URL_MODIFY_PERSONAL, {
-        "id": 1,
+        "id": id,
 
-        "email": "me@me.es",
-        "nombre": "NameSoy",
-        "apellido": "Apellido 1",
+        "email": listValue.email,
+        "nombre": listValue.nombre,
+        "apellido": listValue.apellido,
         "apellido2": "Apellido 2",
-        "telefono": "666666666",
-        "edad": 99,
-        "fecha_nacimiento": new Date().toISOString(),
+        "telefono": listValue.telefono,
+        "edad": listValue.edad,
+        "fecha_nacimiento": listValue.fecha_nacimiento,
         "domicilio": "None",
-        "sexo": "X",
+        "sexo": listValue.sexo,
         
-        "acceso": 2,
-        "password": "abc123"
+        "acceso": listValue.acceso,
+        "password": ''
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            
         })
         .catch(err => console.error)
 }
 
-// function get data personal ->  FUNCIONA
-function getDataPersonal(){
+// function get data personal ->  
+function getDataPersonal(id, modify){
 
     makePost(URL_GET_PERSONAL, {
-        "id": 0
+        id
     })
         .then(data => {
             console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            showFullModal('get-personal', data, modify)
         })
         .catch(err => console.error)
 }
 
 // function delete personal ->  FUNCIONA
-function deletePersonal(){
+function eliminarPersonal(id){
 
     makePost(URL_DELETE_PERSONAL, {
-        "id": 1
+        id
     })
         .then(data => {
-            console.log(data);
-            let list = [{'name': 'Martina Casas'}, {'name': 'Marcos Martin'}]
-            printListClients(list)
+            
+            const perso = keysPersonal.filter(per => per.id === id)[0]
+
+            if(data.params && data.post_result){
+                printListPersonal(keysPersonal.filter(per => per.id != id))
+                Swal.fire(
+                    'Ha sido eliminado!',
+                    `${perso.nombre} ha sido eliminado`,
+                    'success'
+                )
+            } else{
+                Swal.fire(
+                    'Ha ocurrido un error',
+                    `No se ha podido eliminar a ${perso.nombre}`,
+                    'warning'
+                )
+            }
         })
         .catch(err => console.error)
 }

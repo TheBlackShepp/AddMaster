@@ -4,20 +4,64 @@
     <header class="w-full flex flex-col text-gray-600 bg-white shadow rounded-b-lg">
         <div class="flex relative align-center p-5">
             <button class="focus:outline-none" tabindex="0" type="button" aria-label="close">
-                <span class="w-full flex" onclick="closeFullModal()">
+                <span id="close-btn-modal" class="w-full flex" onclick="closeFullModal()">
                     <svg class="w-7 h-7" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
                     </svg>
                 </span>
                 <span class="MuiTouchRipple-root"></span>
             </button>
-            <h5 class="" style="flex: 0.5 1; margin-left: 2rem; font-size: 1.5rem; font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;  font-weight: 400; letter-spacing: 0em">TITULO</h5>
-            <button class="shadow-md rounded-md focus:outline-none bg-{{color}} font-medium hover:bg-brown-600" style="padding: .5rem 2rem;color: #fff;text-transform: capitalize;transition: .3s;" tabindex="0" type="button">
+            <h5 id="title-modal" class="" style="margin-left: 2rem; font-size: 1.5rem; font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;  font-weight: 400; letter-spacing: 0em">TITULO</h5>
+            <button id="save-modal" class="shadow-md rounded-md focus:outline-none bg-{{color}} font-medium hover:bg-brown-600 hidden" style="padding: .5rem 2rem;color: #fff;text-transform: capitalize;transition: .3s;" tabindex="0" type="button">
                 <span class="MuiButton-label">Guardar</span><span class="MuiTouchRipple-root"></span>
             </button>
         </div>
     </header>
 
-    <div id="container-modal" class="w-full md:w-1/4 flex flex-col">
+    <div id="container-modal" class="w-full md:w-2/4 h-full md:h-auto flex flex-col">
+       
+        <div id="modal-personal" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Nombre</label>
+                <input id="modal-personal-nombre" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Apellido</label>
+                <input id="modal-personal-apellido" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Edad</label>
+                <input id="modal-personal-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Email</label>
+                <input id="modal-personal-email" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Telefono</label>
+                <input id="modal-personal-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Sexo</label>
+                <select id="modal-personal-sexo" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select" disabled>
+                    <option value="X">Hombre</option>
+                    <option value="F">Mujer</option>
+                </select>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Fecha de nacimiento</label>
+                <input id="modal-personal-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text" disabled/>
+            </div>
+            <div class="flex flex-col m-5">
+                <label class="font-medium">Permisos</label>
+                <select id="modal-personal-acceso" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select" disabled>
+                   <option value="1">Personal</option>
+                   {% if permission == 0%}
+                        <option value="2">Administrador</option>
+                        <option value="0">Dolores</option>
+                   {% endif %}
+                  </select>
+            </div>
+        </div>
 
     </div>
 

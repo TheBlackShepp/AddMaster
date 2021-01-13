@@ -31908,6 +31908,16 @@ video {
   transition: all ease-in-out 0.5s;
 }
 
+#title-modal{
+  flex-grow: 1;
+}
+
+@media (min-width: 768px) {
+  #title-modal{
+    flex: 0.5 1;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
