@@ -82,7 +82,6 @@ const makePost = async(url, datos) => {
         case 'pedidos':
             get_productos()
             get_clientes()
-            get_pedidos();
             break;
 
         case 'materias':
@@ -117,6 +116,7 @@ function get_clientes(){
     .then(data => {
         console.log(data);
         printListClients(data.clients)
+        get_pedidos();
     })
     .catch(err => console.error)
 }
@@ -194,6 +194,13 @@ function printListProducts(listProducts){
 
     container.innerHTML = text;
     keysProducts= listProducts;
+
+    let option=''
+    keysProducts.forEach(client => {
+        option+=`<option value="${client.id}">${client.nombre}</option>`
+    })
+
+    document.getElementById('modal-order-id_producto').innerHTML= option;
 }
 
 // pintar clientes
@@ -279,6 +286,12 @@ function printListClients(listClients){
 
     container.innerHTML = text;
     keysClients= listClients;
+
+    let option=''
+    keysClients.forEach(client => {
+        option+=`<option value="${client.id}">${client.nombre}</option>`
+    })
+    document.getElementById('modal-order-id_cliente').innerHTML= option;
 }
 
 // pintar pedidos
@@ -304,12 +317,11 @@ const makeRowOrder = (order) => {
             <div class="flex items-center text-sm">
                 <!-- Avatar with inset shadow -->
               
-                <!-- keysClients.filter(clien => clien.id === order.id_cliente)[0].nombre -->
-                <p class="font-semibold">${order.id_cliente}</p>
+                <p class="font-semibold">${keysClients.filter(clien => clien.id === order.id_cliente)[0].nombre}</p>
             </div>
             </td>
             <td class="px-4 py-3 text-sm" onclick="getDataOrder(${order.id})">
-            ${order.fecha_compra}
+                ${order.fecha_compra}
             </td>
             <td class="px-4 py-3 text-xs" onclick="getDataOrder(${order.id})">
                 ${domicilio}
@@ -723,6 +735,7 @@ function createProduct(){
     
     let listValue = {}
     document.querySelectorAll('.marca').forEach(input => {
+
         let i = input.id.split('-')
         let key = i[i.length - 1]
         
@@ -731,6 +744,8 @@ function createProduct(){
         }else
             listValue[ key ] = input.value
         
+        console.log(input, input.value)
+
     })
     console.log(listValue)
 
@@ -1050,7 +1065,7 @@ function createMaterial(){
     })
         .then(data => {
             console.log(data);
-            get_material()
+            get_materias()
             closeFullModal('material')
         })
         .catch(err => console.error)
@@ -1084,7 +1099,7 @@ function deleteMaterial(id){
                     const mat = keysMaterials.filter(per => per.id === id)[0]
     
                     if(data.params && data.post_result){
-                        printListClients(keysMaterials.filter(clien => clien.id != id))
+                        get_materias()
                         Swal.fire(
                             'Ha sido eliminado!',
                             `${mat.nombre} ha sido eliminado`,

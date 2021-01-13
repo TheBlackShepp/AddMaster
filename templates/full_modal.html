@@ -31,11 +31,11 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Precio</label>
-                <input id="modal-product-precio" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-product-precio" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Cantidad</label>
-                <input id="modal-product-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-product-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Etiquetas</label>
@@ -43,11 +43,11 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha de inicio venta</label>
-                <input id="modal-product-fecha_inicio_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-product-fecha_inicio_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="datetime-local"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha fin venta</label>
-                <input id="modal-product-fecha_fin_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-product-fecha_fin_venta" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="datetime-local"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Descripcion</label>
@@ -66,7 +66,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Edad</label>
-                <input id="modal-personal-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-personal-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Email</label>
@@ -74,7 +74,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Telefono</label>
-                <input id="modal-personal-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-personal-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Sexo</label>
@@ -85,7 +85,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha de nacimiento</label>
-                <input id="modal-personal-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-personal-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Permisos</label>
@@ -110,7 +110,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Edad</label>
-                <input id="modal-client-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-client-edad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Email</label>
@@ -118,7 +118,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Telefono</label>
-                <input id="modal-client-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-client-telefono" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Sexo</label>
@@ -129,7 +129,7 @@
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha de nacimiento</label>
-                <input id="modal-client-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-client-fecha_nacimiento" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Domicilio</label>
@@ -140,23 +140,25 @@
         <div id="modal-order" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
             <div class="flex flex-col m-5">
                 <label class="font-medium">Nombre cliente</label>
-                <input id="modal-order-id_cliente" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <select id="modal-order-id_cliente" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
+                </select>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Nombre Producto</label>
-                <input id="modal-order-id_producto" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <select id="modal-order-id_producto" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
+                </select>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha compra</label>
-                <input id="modal-order-fecha_compra" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-order-fecha_compra" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha entrega</label>
-                <input id="modal-order-fecha_entrega" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-order-fecha_entrega" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha entregado</label>
-                <input id="modal-order-fecha_entregado" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-order-fecha_entregado" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Enviar a domicilio</label>
@@ -169,20 +171,22 @@
 
         <div id="modal-material" class="w-full h-full md:h-auto grid grid-cols-1 md:grid-cols-2 hidden">
             <div class="flex flex-col m-5">
-                <label class="font-medium">Nombre cliente</label>
-                <input id="modal-material-tipo_materia" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <label class="font-medium">Materia Prima</label>
+                <select id="modal-material-tipo_materia" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" name="select">
+                    <option value="0">Albariño</option>
+                </select>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Cantidad</label>
-                <input id="modal-material-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-material-cantidad" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Cantidad Recibida</label>
-                <input id="modal-material-cantidad_recibida" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-material-cantidad_recibida" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="number"/>
             </div>
             <div class="flex flex-col m-5">
                 <label class="font-medium">Fecha llegada</label>
-                <input id="modal-material-fecha_llegada" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="text"/>
+                <input id="modal-material-fecha_llegada" class="md:pl-6 p-2 bg-gray-300 rounded-md focus:outline-none text-gray-600 font-bold shadow" type="date"/>
             </div>
         </div>
 
