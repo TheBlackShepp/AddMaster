@@ -37,7 +37,7 @@ class MateriaPrima(IDClass):
     # endregion
     def formulario(self, formulario: dict):
         super(MateriaPrima, self).formulario(formulario)
-        self._tipo_materia = formulario["tipo_materia"]
+        self._tipo_materia = TipoMateria(formulario["tipo_materia"])
         self._cantidad = formulario["cantidad"]
 
     def __dict__(self) -> dict:
