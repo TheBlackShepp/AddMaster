@@ -67,7 +67,10 @@ class CoreBase:
             if type(formulario.get(string)) is not bool:
                 l: list = formulario.get(string)
                 if l.__len__() > 0:
-                    formulario.update({string: bool(l[0])})
+                    if l[0] == "true":
+                        formulario.update({string: True})
+                    else:
+                        formulario.update({string: False})
         return formulario
 
     def restore_form(self, formulario: dict) -> dict:
