@@ -270,8 +270,8 @@ def imprimir():
     return {"pdfname": easy_function(request.cookies, string_to_pdf, request.form.to_dict(flat=False))}
 
 
-@app.route("/get_materia_prima_name/<int: id>")
-def get_materia_prima_name(id: int):
+@app.route("/get_materia_prima_name/<int:id>")
+def get_materia_prima_name(id):
     if id < 0:
         return "No existe"
     elif id > TipoMateria.Alvarinio.value:
