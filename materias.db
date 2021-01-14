@@ -1,1 +1,1 @@
-"{\"materias\": [{\"id\": 2, \"tipo_materia\": 0, \"cantidad\": 12, \"registro\": [\"[object Object]\"], \"cantidad_recibida\": 1, \"fecha_llegada\": \"121212\"}, {\"id\": 5, \"tipo_materia\": 0, \"cantidad\": 21313, \"registro\": [\"[object Object]\"], \"cantidad_recibida\": 213213, \"fecha_llegada\": \"asdad\"}], \"id\": 6}"
+"{\"materias\": [{\"id\": 6, \"tipo_materia\": 1, \"cantidad\": 12, \"registro\": [\"[object Object]\"], \"cantidad_recibida\": 11, \"fecha_llegada\": \"2020-12-31\"}], \"id\": 7}"

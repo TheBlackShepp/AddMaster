@@ -395,12 +395,28 @@ function printListOrders(listOrders){
 // pintar materias prima
 const makeRowMaterial = (material) => {
 
+    let m=''
+    switch (material.tipo_materia) {
+        case 0:
+            m='Albariño'
+            break;
+        case 1:
+            m='Verdejo'
+            break;
+        case 2:
+            m='Chanrdonnay'
+            break;
+        case 3:
+            m='Tempranillo'
+            break;
+    }
+
     return `
         <tr class="text-gray-700 dark:text-gray-400 cursor-pointer">
             <td class="px-4 py-3" onclick="getDataMaterial(${material.id})">
             <div class="flex items-center text-sm">
                 
-                <p class="font-semibold">${material.tipo_materia}</p>
+                <p class="font-semibold">${m}</p>
             </div>
             </td>
             <td class="px-4 py-3 text-sm" onclick="getDataMaterial(${material.id})">
@@ -941,12 +957,13 @@ function deleteClient(id){
                     const clien = keysClients.filter(per => per.id === id)[0]
     
                     if(data.params && data.post_result){
-                        printListClients(keysClients.filter(clien => clien.id != id))
+                        // printListClients(keysClients.filter(clien => clien.id != id))
                         Swal.fire(
                             'Ha sido eliminado!',
                             `${clien.nombre} ha sido eliminado`,
                             'success'
                         )
+                        get_clientes()
                     } else{
                         Swal.fire(
                             'Ha ocurrido un error',
@@ -1066,12 +1083,13 @@ function deleteOrder(id){
                     const orid = keysOrders.filter(per => per.id === id)[0]
     
                     if(data.params && data.post_result){
-                        printListClients(keysOrders.filter(clien => clien.id != id))
+                        // printListClients(keysOrders.filter(clien => clien.id != id))
                         Swal.fire(
                             'Ha sido eliminado!',
                             `${orid.id} ha sido eliminado`,
                             'success'
                         )
+                        get_pedidos()
                     } else{
                         Swal.fire(
                             'Ha ocurrido un error',
@@ -1297,7 +1315,8 @@ function eliminarPersonal(id){
             const perso = keysPersonal.filter(per => per.id === id)[0]
 
             if(data.params && data.post_result){
-                printListPersonal(keysPersonal.filter(per => per.id != id))
+                // printListPersonal(keysPersonal.filter(per => per.id != id))
+                get_personal()
                 Swal.fire(
                     'Ha sido eliminado!',
                     `${perso.nombre} ha sido eliminado`,
@@ -1321,7 +1340,7 @@ function imprimirPDF(id){
         id
     })
         .then(data => {
-            console.log(data);
+            console.log('AQUI->', data);
             window.location= `${LOCATION.protocol}//${LOCATION.hostname}:${LOCATION.port}/getFile/${data.pdfname}`
         })
         .catch(err => console.error)

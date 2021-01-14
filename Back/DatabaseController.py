@@ -329,6 +329,7 @@ class DatabaseController(DebugClass):
         formulario.update({"id": self.__last_pedido_id})
         p = PedidoDetalle()
         p.formulario(formulario)
+    
         self.__pedido_list.append(p)
         self.__last_pedido_id += 1
         self.save_pedidos()
