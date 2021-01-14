@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-"{\"pedido\": [], \"id\": 25}"
-=======
 "{\"pedido\": [{\"id\": 26, \"id_cliente\": 6, \"enviar_a_domicilio\": true, \"id_producto\": 2, \"fecha_entrega\": \"2021-01-12\", \"fecha_compra\": \"2021-01-21\", \"fecha_entregado\": \"2021-01-21\"}], \"id\": 27}"
->>>>>>> 0917a477ce34be197f8db824b14c6f396bfa2ee8
