@@ -144,7 +144,11 @@ def logout():
         cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
         if controlador_cookies.contiene_cookie(cookiesesion) is True:
             controlador_cookies.eliminar_cookie(cookiesesion)
-    return redirect("/")
+            return indexhtml("", True)
+        else:
+            return redirect("/")
+    else:
+        return redirect("/")
 
 
 # endregion
