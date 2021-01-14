@@ -5,7 +5,6 @@ from Herramientas.SimpleTools import ControlVariables
 from Back.Enums import TipoUsuario, TipoMateria
 from fpdf import FPDF
 from os import path
-import pdfkit
 
 # Instancias
 app = Flask(__name__)
@@ -62,14 +61,11 @@ def string_to_pdf(id_usuario: int, formulario: dict) -> str:
     result: str = ""
     pedido = core_reservas.get_datos_pedido(id_usuario, formulario)
     if pedido['params'] is True and pedido["permission"] is True:
-        print("Entra")
-        result = f'Pedido numero {pedido["id"]}.pdf'
-        pdfkit.from_string(pedido.__str__(), result)
-        """pdf = FPDF()
+        pdf = FPDF()
         pdf.add_page()
         pdf.set_font('Courier', 'B', 16)
-        pdf.cell(40, 10, pedido.__str__())
-        pdf.output(result, 'F')"""
+        pdf.cell(40, 10, pedido.__str__(), fill=1)
+        pdf.output(result, 'F')
     return result
 
 
