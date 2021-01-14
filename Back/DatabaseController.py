@@ -354,7 +354,6 @@ class DatabaseController(DebugClass):
     def get_datos_pedido(self, id_pedido_detalle: int) -> dict:
         result: dict = {}
         pos: int = self.get_pos_id_pedido(id_pedido_detalle)
-        print(id_pedido_detalle, pos, self.__pedido_list)
         if self.__control_variables.variable_correcta_int(pos):
             result.update(self.__pedido_list[pos].__dict__())
         return result
