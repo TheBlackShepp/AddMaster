@@ -61,6 +61,7 @@ def string_to_pdf(id_usuario: int, formulario: dict) -> str:
     result: str = ""
     pedido = core_reservas.get_datos_pedido(id_usuario, formulario)
     if pedido['params'] is True and pedido["permission"] is True:
+        result = f'Pedido numero {pedido["id"]}.pdf'
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font('Courier', 'B', 16)
