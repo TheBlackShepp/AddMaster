@@ -15,6 +15,9 @@ class TipoUsuario(Enum):
 class TipoMateria(Enum):
     NULL = -1
     Alvarinio = 0
+    Verdejo = 1
+    Chanrdonnay = 2
+    Tempranillo = 3
 
 
 class TipoCore(Enum):
