@@ -138,6 +138,15 @@ def login():
     return resultado
 
 
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    if request.method == "POST":
+        cookiesesion = controlador_cookies.get_cookie_by_cookie_jar(request.cookies)
+        if controlador_cookies.contiene_cookie(cookiesesion) is True:
+            controlador_cookies.eliminar_cookie(cookiesesion)
+    return redirect("/")
+
+
 # endregion
 # region Posts
 # region Producto
