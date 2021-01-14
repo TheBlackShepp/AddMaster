@@ -99,9 +99,9 @@ class DatabaseController(DebugClass):
                 data = loads(load(json_file))
                 self.__last_pedido_id = data['id']
                 data = data[self.__pedido_name]
-                for materia_prima_data in data:
-                    m = DetalleMateriaPrima()
-                    m.formulario(materia_prima_data)
+                for pedido_detalle_data in data:
+                    m = PedidoDetalle()
+                    m.formulario(pedido_detalle_data)
                     self.__pedido_list.append(m)
         except:
             print(f"No hay file '{self.__pedido_name}.db' aun")
