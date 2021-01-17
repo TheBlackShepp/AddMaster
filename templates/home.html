@@ -1,6 +1,8 @@
 {% include 'header.html' %}
 
-  {% if permission == 1 %}
+  {% if permission == 0 %}
+    {% set color = 'brown-800' %}
+  {% elif  permission == 1 %}
     {% set color = 'brown-700' %}
   {% else %}
     {% set color = 'brown-300' %}
